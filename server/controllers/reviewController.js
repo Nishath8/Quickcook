@@ -50,4 +50,30 @@ const addReview = async (req, res) => {
   }
 };
 
-module.exports = { getCookReviews, addReview };
+// DELETE /reviews/:id
+const deleteReview = async (req, res) => {
+  try {
+    const review = await Review.findById(req.params.id);
+    if (!review) return res.status(404).json({ message: 'Review not found' });
+
+    const cookId = review.cookId;
+    await Review.findByIdAndDelete(req.params.id);
+
+    // Recalculate Cook rating
+    const allReviews = await Review.find({ cookId });
+    const avgRating = allReviews.length > 0 
+      ? allReviews.reduce((acc, item) => item.rating + acc, 0) / allReviews.length 
+      : 0;
+    
+    await Cook.findByIdAndUpdate(cookId, {
+      averageRating: parseFloat(avgRating.toFixed(1)),
+      reviewCount: allReviews.length
+    });
+
+    res.json({ message: 'Review deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getCookReviews, addReview, deleteReview };

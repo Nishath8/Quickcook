@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { X, Star, MessageSquare } from 'lucide-react';
+import { X, Star, MessageSquare, Trash2 } from 'lucide-react';
 
 export default function ReviewModal({ cook, onClose }) {
   const { user, token } = useAuth();
+  const isAdmin = localStorage.getItem('adminAuth') === 'true';
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(5);
@@ -24,6 +25,16 @@ export default function ReviewModal({ cook, onClose }) {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!window.confirm('Are you sure you want to delete this review?')) return;
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/reviews/${reviewId}`);
+      fetchReviews();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to delete review');
     }
   };
 
@@ -131,8 +142,17 @@ export default function ReviewModal({ cook, onClose }) {
             ) : (
               <div className="space-y-4">
                 {reviews.map((review) => (
-                  <div key={review._id} className="bg-white p-4 rounded-lg border border-gray-100 shadow-sm">
-                    <div className="flex items-center justify-between mb-2">
+                  <div key={review._id} className="bg-white p-4 rounded-lg border border-gray-100 shadow-sm relative group transition-colors hover:border-red-100">
+                    {isAdmin && (
+                      <button 
+                        onClick={() => handleDeleteReview(review._id)}
+                        className="absolute top-3 right-3 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-all opacity-0 group-hover:opacity-100"
+                        title="Delete Review (Admin Only)"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                    <div className="flex items-center justify-between mb-2 pr-8">
                       <div className="flex items-center space-x-2">
                         {review.userId?.avatar ? (
                           <img src={review.userId.avatar} alt="Avatar" className="w-6 h-6 rounded-full" />
