@@ -7,6 +7,14 @@ const createCook = async (req, res) => {
     if (!name || !location || !cuisine) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
+
+    // Check for duplicate profile
+    const duplicateQuery = contact ? { name, contact } : { name, location };
+    const existingCook = await Cook.findOne(duplicateQuery);
+    if (existingCook) {
+      return res.status(409).json({ message: 'A cook profile with this name and contact/location already exists.' });
+    }
+
     const cook = new Cook({ name, location, cuisine, price_range, contact, status: 'pending' });
     await cook.save();
     res.status(201).json({ message: 'Cook added successfully' });
