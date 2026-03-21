@@ -1,8 +1,11 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { ChefHat, PlusCircle, Home, ShieldCheck } from 'lucide-react';
+import { ChefHat, PlusCircle, Home, ShieldCheck, LogOut } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
+import { useAuth } from '../context/AuthContext';
 
 export default function Layout() {
   const location = useLocation();
+  const { user, login, logout } = useAuth();
 
   const navLinks = [
     { name: 'Home', path: '/', icon: <Home className="w-5 h-5 mr-1" /> },
@@ -27,7 +30,7 @@ export default function Layout() {
             </div>
 
             {/* Nav Links */}
-            <div className="flex space-x-6">
+            <div className="flex space-x-6 items-center">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
                 return (
@@ -45,6 +48,36 @@ export default function Layout() {
                   </Link>
                 );
               })}
+              
+              {/* Auth Actions */}
+              <div className="ml-4 border-l border-gray-200 pl-6 h-full flex items-center">
+                {user ? (
+                  <div className="flex items-center space-x-3">
+                    <img 
+                      src={user.avatar} 
+                      alt="Avatar" 
+                      className="w-8 h-8 rounded-full border border-gray-200 shadow-sm"
+                      referrerPolicy="no-referrer"
+                    />
+                    <button 
+                      onClick={logout}
+                      className="text-gray-400 hover:text-red-500 transition-colors"
+                      title="Log out"
+                    >
+                      <LogOut className="w-5 h-5" />
+                    </button>
+                  </div>
+                ) : (
+                  <GoogleLogin
+                    onSuccess={(credentialResponse) => {
+                      login(credentialResponse.credential).catch(err => alert(err.message));
+                    }}
+                    onError={() => console.log('Login Failed')}
+                    shape="pill"
+                    size="medium"
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>

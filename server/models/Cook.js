@@ -22,6 +22,14 @@ const cookSchema = new mongoose.Schema({
   contact: {
     type: String
   },
+  averageRating: {
+    type: Number,
+    default: 0
+  },
+  reviewCount: {
+    type: Number,
+    default: 0
+  },
   status: {
     type: String,
     enum: ['pending', 'approved', 'denied'],
