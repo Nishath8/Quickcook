@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 
 export default function Admin() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('adminAuth') === 'true';
+  });
   const [password, setPassword] = useState('');
 
   const [cooks, setCooks] = useState([]);
@@ -22,6 +24,7 @@ export default function Admin() {
     e.preventDefault();
     if (password === 'admin123') {
       setIsLoggedIn(true);
+      localStorage.setItem('adminAuth', 'true');
     } else {
       alert('Incorrect password');
     }
@@ -141,7 +144,18 @@ export default function Admin() {
 
   return (
     <div className="max-w-6xl mx-auto py-6 px-4">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Admin Dashboard</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+        <button
+          onClick={() => {
+            localStorage.removeItem('adminAuth');
+            setIsLoggedIn(false);
+          }}
+          className="text-sm px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-md transition-colors"
+        >
+          Logout
+        </button>
+      </div>
       <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-100">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
