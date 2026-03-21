@@ -17,7 +17,7 @@ export default function Layout() {
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
       <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center">
@@ -25,12 +25,12 @@ export default function Layout() {
                 <div className="bg-primary-600 p-2 rounded-lg text-white">
                   <ChefHat className="w-6 h-6" />
                 </div>
-                <span className="font-bold text-xl text-gray-900 tracking-tight">Quickcook</span>
+                <span className="font-bold text-xl text-gray-900 tracking-tight hidden sm:block">Quickcook</span>
               </Link>
             </div>
 
             {/* Nav Links */}
-            <div className="flex space-x-6 items-center">
+            <div className="flex space-x-2 sm:space-x-6 items-center">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
                 return (
@@ -50,7 +50,7 @@ export default function Layout() {
               })}
               
               {/* Auth Actions */}
-              <div className="ml-4 border-l border-gray-200 pl-6 h-full flex items-center">
+              <div className="ml-2 sm:ml-4 border-l border-gray-200 pl-2 sm:pl-6 h-full flex items-center">
                 {user ? (
                   <div className="flex items-center space-x-3">
                     <img 
