@@ -1,23 +1,79 @@
 const Cook = require('../models/Cook');
 
+// In-memory rate limiting and utility helpers
+const submissionTracker = new Map();
+const containsUrl = (str) => {
+  if (!str) return false;
+  const lower = str.toLowerCase();
+  return lower.includes('http://') || lower.includes('https://') || lower.includes('.com') || lower.includes('www.');
+};
+const escapeRegex = (str) => str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+
 // POST /cooks
 const createCook = async (req, res) => {
   try {
-    const { name, location, cuisine, price_range, contact } = req.body;
-    if (!name || !location || !cuisine) {
-      return res.status(400).json({ message: 'Missing required fields' });
+    const ip = req.ip || req.connection?.remoteAddress || 'unknown';
+    const now = Date.now();
+    
+    // 1. Basic Rate Limiting (Max 3 submissions per IP per 60 seconds)
+    if (submissionTracker.has(ip)) {
+      const history = submissionTracker.get(ip).filter(timestamp => now - timestamp < 60000);
+      if (history.length >= 3) {
+        return res.status(429).json({ message: 'Too many submissions. Please wait a minute before trying again.' });
+      }
+      history.push(now);
+      submissionTracker.set(ip, history);
+    } else {
+      submissionTracker.set(ip, [now]);
     }
 
-    // Check for duplicate profile
-    const duplicateQuery = contact ? { name, contact } : { name, location };
+    let { name, location, cuisine, price_range, contact } = req.body;
+
+    if (!name || !location || !cuisine) {
+      return res.status(400).json({ message: 'Name, location, and cuisine are required.' });
+    }
+
+    // 2. Input Sanitization
+    name = name.trim();
+    location = location.trim();
+    cuisine = cuisine.trim();
+    contact = contact ? contact.trim() : '';
+    price_range = price_range ? price_range.trim() : '';
+
+    // 3. Strict Length & Bounds Validation
+    if (name.length < 2 || name.length > 50) return res.status(400).json({ message: 'Name must be between 2 and 50 characters.' });
+    if (location.length < 2 || location.length > 100) return res.status(400).json({ message: 'Location must be between 2 and 100 characters.' });
+    if (cuisine.length < 2 || cuisine.length > 100) return res.status(400).json({ message: 'Cuisine must be between 2 and 100 characters.' });
+    if (contact.length > 100) return res.status(400).json({ message: 'Contact details are too long (max 100 characters).' });
+
+    // 4. Fake / Spam Links Blocking
+    if (containsUrl(name) || containsUrl(location) || containsUrl(cuisine) || containsUrl(contact)) {
+      return res.status(400).json({ message: 'Links or web site addresses are absolutely not permitted in submissions.' });
+    }
+
+    // 5. Fuzzy Data Consistency Duplicate Check (Case-insensitive matching to catch sneaky variants)
+    const nameRegex = new RegExp('^' + escapeRegex(name) + '$', 'i');
+    
+    let duplicateQuery = { name: nameRegex, status: { $ne: 'denied' } };
+    if (contact) {
+      duplicateQuery.contact = new RegExp('^' + escapeRegex(contact) + '$', 'i');
+    } else {
+      duplicateQuery.location = new RegExp('^' + escapeRegex(location) + '$', 'i');
+    }
+
     const existingCook = await Cook.findOne(duplicateQuery);
     if (existingCook) {
-      return res.status(409).json({ message: 'A cook profile with this name and contact/location already exists.' });
+      return res.status(409).json({ message: 'An active or pending cook profile with this exact name and details already exists.' });
     }
 
+    // Pass all tests -> creation
     const cook = new Cook({ name, location, cuisine, price_range, contact, status: 'pending' });
     await cook.save();
-    res.status(201).json({ message: 'Cook added successfully' });
+
+    // Memory leak prevention block
+    if (submissionTracker.size > 2000) submissionTracker.clear();
+
+    res.status(201).json({ message: 'Cook profile submitted successfully!' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
