@@ -158,8 +158,8 @@ export default function Admin() {
       </div>
       <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-100">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full block sm:table">
+            <thead className="bg-gray-50 hidden sm:table-header-group">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">Location & Cuisine</th>
@@ -168,44 +168,47 @@ export default function Admin() {
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white block sm:table-row-group divide-y divide-gray-200">
               {cooks.map((cook) => (
                 editingId === cook._id ? (
-                  <tr key={cook._id} className="bg-blue-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 align-top">
+                  <tr key={cook._id} className="block sm:table-row bg-blue-50 border-b-4 sm:border-b-0 border-blue-100 pb-4 sm:pb-0">
+                    <td className="block sm:table-cell px-4 py-3 sm:px-6 sm:py-4 align-top">
+                      <div className="sm:hidden text-xs font-bold text-gray-500 uppercase mb-1">Name</div>
                       <input
-                        className="w-full p-2 border border-blue-200 rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm"
+                        className="w-full p-2 border border-blue-200 rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm text-sm"
                         value={editData.name}
                         onChange={(e) => handleEditChange(e, 'name')}
                         placeholder="Name"
                       />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 align-top">
+                    <td className="block sm:table-cell px-4 py-3 sm:px-6 sm:py-4 align-top">
+                      <div className="sm:hidden text-xs font-bold text-gray-500 uppercase mb-1">Location & Cuisine</div>
                       <div className="flex flex-col space-y-2">
                          <input
-                           className="w-full p-2 border border-blue-200 rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm"
+                           className="w-full p-2 border border-blue-200 rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm text-sm"
                            value={editData.location}
                            onChange={(e) => handleEditChange(e, 'location')}
                            placeholder="Location"
                          />
                          <input
-                           className="w-full p-2 border border-blue-200 rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm"
+                           className="w-full p-2 border border-blue-200 rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm text-sm"
                            value={editData.cuisine}
                            onChange={(e) => handleEditChange(e, 'cuisine')}
                            placeholder="Cuisine"
                          />
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 align-top">
+                    <td className="block sm:table-cell px-4 py-3 sm:px-6 sm:py-4 align-top">
+                       <div className="sm:hidden text-xs font-bold text-gray-500 uppercase mb-1">Contact & Price</div>
                        <div className="flex flex-col space-y-2">
                          <input
-                           className="w-full p-2 border border-blue-200 rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm"
+                           className="w-full p-2 border border-blue-200 rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm text-sm"
                            value={editData.contact}
                            onChange={(e) => handleEditChange(e, 'contact')}
                            placeholder="Contact Info"
                          />
                          <select
-                           className="w-full p-2 border border-blue-200 rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm bg-white"
+                           className="w-full p-2 border border-blue-200 rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm bg-white text-sm"
                            value={editData.price_range}
                            onChange={(e) => handleEditChange(e, 'price_range')}
                          >
@@ -217,7 +220,8 @@ export default function Admin() {
                          </select>
                        </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm align-top">
+                    <td className="block sm:table-cell px-4 py-3 sm:px-6 sm:py-4 align-top">
+                      <div className="sm:hidden text-xs font-bold text-gray-500 uppercase mb-1">Status</div>
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                           cook.status === 'approved' ? 'bg-green-100 text-green-800'
                           : cook.status === 'denied' ? 'bg-red-100 text-red-800'
@@ -227,17 +231,17 @@ export default function Admin() {
                         {cook.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium align-top">
-                      <div className="flex justify-end space-x-2">
+                    <td className="block sm:table-cell px-4 py-3 sm:px-6 sm:py-4 align-top">
+                      <div className="flex sm:justify-end space-x-2 mt-2 sm:mt-0">
                         <button
                           onClick={() => saveEdit(cook._id)}
-                          className="text-white hover:bg-green-700 font-medium bg-green-600 px-3 py-1 rounded-md transition-colors"
+                          className="flex-1 sm:flex-none text-center text-white hover:bg-green-700 font-medium bg-green-600 px-3 py-2 sm:py-1 rounded-md transition-colors"
                         >
                           Save
                         </button>
                         <button
                           onClick={() => setEditingId(null)}
-                          className="text-gray-600 hover:text-white hover:bg-gray-600 font-medium bg-gray-200 px-3 py-1 rounded-md transition-colors"
+                          className="flex-1 sm:flex-none text-center text-gray-600 hover:text-white hover:bg-gray-600 font-medium bg-gray-200 px-3 py-2 sm:py-1 rounded-md transition-colors"
                         >
                           Cancel
                         </button>
@@ -245,17 +249,23 @@ export default function Admin() {
                     </td>
                   </tr>
                 ) : (
-                  <tr key={cook._id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 align-top">{cook.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 align-top">
-                      <div className="font-medium text-gray-800">{cook.location}</div>
+                  <tr key={cook._id} className="block sm:table-row hover:bg-gray-50 transition-colors border-b-4 sm:border-b-0 border-gray-100 pb-4 sm:pb-0">
+                    <td className="block sm:table-cell px-4 py-3 sm:px-6 sm:py-4 align-top">
+                      <div className="sm:hidden text-xs font-bold text-gray-500 uppercase mb-1">Name</div>
+                      <div className="text-sm font-medium text-gray-900">{cook.name}</div>
+                    </td>
+                    <td className="block sm:table-cell px-4 py-3 sm:px-6 sm:py-4 align-top">
+                      <div className="sm:hidden text-xs font-bold text-gray-500 uppercase mb-1">Location & Cuisine</div>
+                      <div className="text-sm font-medium text-gray-800">{cook.location}</div>
                       <div className="text-xs text-gray-400 mt-1">{cook.cuisine}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 align-top">
-                      <div className="text-gray-800">{cook.contact || <span className="italic text-gray-400">No contact provided</span>}</div>
+                    <td className="block sm:table-cell px-4 py-3 sm:px-6 sm:py-4 align-top">
+                      <div className="sm:hidden text-xs font-bold text-gray-500 uppercase mb-1">Contact & Price</div>
+                      <div className="text-sm text-gray-800">{cook.contact || <span className="italic text-gray-400">No contact provided</span>}</div>
                       <div className="text-xs text-gray-400 mt-1">{cook.price_range || <span className="italic">No price provided</span>}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm align-top">
+                    <td className="block sm:table-cell px-4 py-3 sm:px-6 sm:py-4 align-top">
+                      <div className="sm:hidden text-xs font-bold text-gray-500 uppercase mb-1">Status</div>
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                           cook.status === 'approved' ? 'bg-green-100 text-green-800'
                           : cook.status === 'denied' ? 'bg-red-100 text-red-800'
@@ -265,19 +275,19 @@ export default function Admin() {
                         {cook.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium align-top">
-                      <div className="flex justify-end space-x-2">
+                    <td className="block sm:table-cell px-4 py-3 sm:px-6 sm:py-4 align-top">
+                      <div className="flex sm:justify-end space-x-2 mt-2 sm:mt-0">
                         {cook.status === 'pending' && (
                           <>
                             <button
                               onClick={() => updateCookStatus(cook._id, 'approved')}
-                              className="text-green-600 hover:text-green-900 font-medium bg-green-50 px-3 py-1 rounded-md transition-colors"
+                              className="flex-1 sm:flex-none text-center text-green-600 hover:text-green-900 font-medium bg-green-50 px-3 py-2 sm:py-1 rounded-md transition-colors"
                             >
                               Approve
                             </button>
                             <button
                               onClick={() => updateCookStatus(cook._id, 'denied')}
-                              className="text-red-600 hover:text-red-900 font-medium bg-red-50 px-3 py-1 rounded-md transition-colors"
+                              className="flex-1 sm:flex-none text-center text-red-600 hover:text-red-900 font-medium bg-red-50 px-3 py-2 sm:py-1 rounded-md transition-colors"
                             >
                               Deny
                             </button>
@@ -287,13 +297,13 @@ export default function Admin() {
                           <>
                             <button
                               onClick={() => handleEditClick(cook)}
-                              className="text-blue-600 hover:text-white hover:bg-blue-600 font-medium bg-blue-50 px-3 py-1 rounded-md transition-colors"
+                              className="flex-1 sm:flex-none text-center text-blue-600 hover:text-white hover:bg-blue-600 font-medium bg-blue-50 px-3 py-2 sm:py-1 rounded-md transition-colors"
                             >
                               Edit
                             </button>
                             <button
                               onClick={() => deleteCookFn(cook._id)}
-                              className="text-gray-600 hover:text-white hover:bg-gray-800 font-medium bg-gray-100 px-3 py-1 rounded-md transition-colors"
+                              className="flex-1 sm:flex-none text-center text-gray-600 hover:text-white hover:bg-gray-800 font-medium bg-gray-100 px-3 py-2 sm:py-1 rounded-md transition-colors"
                             >
                               Delete
                             </button>
