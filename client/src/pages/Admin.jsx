@@ -124,7 +124,7 @@ export default function Admin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 p-2 border"
-              placeholder="Enter admin password (admin123)"
+              placeholder="Enter admin password"
               required
             />
           </div>
