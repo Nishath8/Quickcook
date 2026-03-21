@@ -18,7 +18,7 @@ export default function Layout() {
           <div className="flex justify-between h-16 items-center">
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center">
-              <Link to="/" className="flex items-center space-x-2">
+              <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity cursor-pointer">
                 <div className="bg-primary-600 p-2 rounded-lg text-white">
                   <ChefHat className="w-6 h-6" />
                 </div>
