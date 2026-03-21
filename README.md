@@ -11,7 +11,13 @@ A full-stack web application that allows users to find local cooks and chefs bas
 
 - **User Portal:** View, search, and filter available cooks based on location and cuisine.
 - **Cook Registration:** Apply to become a cook on the platform.
-- **Admin Dashboard:** Manage cook applications (approve, edit, delete, deny).
+- **Admin Dashboard:** Manage cook applications (approve, edit, delete, deny) with inline editing.
+- **Responsive UI:** Fully mobile-friendly design across all pages, including responsive admin tables.
+- **Session Persistence:** Secure browser `localStorage` integration keeps administrators logged in across visits.
+- **Security & Anti-Spam:** 
+  - IP-based rate limiting (max 3 applications per minute).
+  - Strict data validation and URL blockers to prevent fake bot submissions.
+  - Fuzzy-match duplication checks automatically reject identical cook profiles.
 
 ## Local Development
 
