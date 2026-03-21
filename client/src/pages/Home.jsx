@@ -72,7 +72,7 @@ export default function Home() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cooks.map((cook, index) => (
+          {[...cooks].sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0)).map((cook, index) => (
             <div 
               key={cook._id} 
               className="animate-fade-in-up"
