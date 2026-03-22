@@ -71,7 +71,7 @@ export default function CookCard({ cook }) {
             )}
           </div>
           <div>
-            <div className="card-name-text text-xl" style={{ fontFamily: 'var(--serif)' }}>{cook.name}</div>
+            <div className="card-name-text text-xl" style={{ fontFamily: 'var(--serif)', letterSpacing: '0.01em' }}>{cook.name}</div>
             <div className="card-cuisine-text text-gray-500 text-sm">{cook.cuisine}</div>
             <div className="v-badge" style={{marginTop:'4px'}}>
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1A6B4A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -81,22 +81,22 @@ export default function CookCard({ cook }) {
         </div>
         
         {cook.vouchCount > 0 && (
-          <div className="vouch-strip bg-green-50 rounded-lg p-2 flex items-center mb-4">
-            <span className="vouches-text ml-2 text-green-800 text-sm font-medium">Vouched by {cook.vouchCount} past clients</span>
+          <div className="vouch-strip bg-green-50/50 rounded-xl px-4 py-3 flex items-center mb-6 border border-green-100/50">
+            <span className="vouches-text text-green-800 text-xs font-semibold tracking-wide uppercase">Vouched by {cook.vouchCount} {cook.vouchCount === 1 ? 'client' : 'clients'}</span>
           </div>
         )}
 
-        <div className="card-meta-grid text-sm text-gray-600 space-y-2 mb-4">
-          <div className="cm flex items-center space-x-2">
-            <svg className="w-4 h-4 text-gray-400" viewBox="0 0 14 14" fill="none"><path d="M7 7h6M7 11h4M7 3h6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/><rect x="1" y="3" width="4" height="8" rx="0.5" stroke="currentColor" strokeWidth="1.2"/></svg>
-            <span>{cook.price_range} per visit</span>
+        <div className="flex justify-between items-start mb-6 mt-2">
+          <div className="cm flex items-center space-x-3 text-gray-600">
+            <svg className="w-5 h-5 text-gray-400" viewBox="0 0 14 14" fill="none"><path d="M7 7h6M7 11h4M7 3h6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/><rect x="1" y="3" width="4" height="8" rx="0.5" stroke="currentColor" strokeWidth="1.2"/></svg>
+            <span className="text-sm font-medium">{cook.price_range} / visit</span>
           </div>
           {cook.dietary_preferences?.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-1">
+            <div className="flex flex-wrap gap-2 justify-end">
               {cook.dietary_preferences.map(diet => (
-                <span key={diet} className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase ${
+                <span key={diet} className={`text-[10px] px-2 py-1 rounded-md font-bold uppercase tracking-wider ${
                   diet === 'Veg' ? 'bg-green-100 text-green-700' : 
-                  diet === 'Non-Veg' ? 'bg-red-100 text-red-700' : 
+                  diet === 'Non-Veg' ? 'bg-red-50 text-red-700' : 
                   'bg-blue-100 text-blue-700'
                 }`}>
                   {diet}
@@ -106,14 +106,16 @@ export default function CookCard({ cook }) {
           )}
         </div>
 
-        <div className="card-stars flex items-center space-x-2 mb-4">
-          <span className="text-yellow-500 text-sm tracking-widest">
+        <div className="card-stars flex items-center space-x-3 mb-6 pt-2 border-t border-gray-50">
+          <span className="text-yellow-500 text-xs tracking-[0.2em] font-bold">
             {cook.averageRating > 0 ? '★'.repeat(Math.round(cook.averageRating)) + '☆'.repeat(5 - Math.round(cook.averageRating)) : '☆☆☆☆☆'}
           </span>
-          <span className="text-sm font-semibold text-gray-900">
-            {cook.averageRating > 0 ? cook.averageRating.toFixed(1) : 'New'}
-          </span>
-          <span className="text-sm text-gray-500">· {cook.reviewCount} reviews</span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-sm font-bold text-gray-900">
+              {cook.averageRating > 0 ? cook.averageRating.toFixed(1) : 'New'}
+            </span>
+            <span className="text-xs text-gray-400 font-medium">· {cook.reviewCount} {cook.reviewCount === 1 ? 'review' : 'reviews'}</span>
+          </div>
         </div>
 
         <div className="card-locked bg-[#F8F6F2] -mx-6 px-6 py-5 rounded-lg mb-4 text-sm mt-2">
