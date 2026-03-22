@@ -15,12 +15,8 @@ export default function CookProfile() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!user) {
-      navigate('/');
-      return;
-    }
     fetchCookData();
-  }, [id, user]);
+  }, [id]);
 
   const fetchCookData = async () => {
     setLoading(true);

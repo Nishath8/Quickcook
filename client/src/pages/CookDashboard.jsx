@@ -199,7 +199,7 @@ export default function CookDashboard() {
           <div className="bg-white p-10 rounded-[32px] border border-[#E5E0D8] shadow-sm">
             <h2 className="text-2xl font-serif font-bold text-[#1A1917] mb-10 flex items-center gap-3">
               <span className="w-8 h-8 rounded-lg bg-[#F7F4EE] flex items-center justify-center text-sm font-sans">01</span>
-              Secretariat / Profile Info
+              Profile Info
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               <div className="sm:col-span-2">
