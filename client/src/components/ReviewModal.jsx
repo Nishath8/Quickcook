@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { X, Star, MessageSquare, Trash2, PlusCircle, ShieldCheck } from 'lucide-react';
@@ -62,8 +63,8 @@ export default function ReviewModal({ cook, onClose }) {
     }
   };
 
-  return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[100] animate-in fade-in duration-300">
+  return createPortal(
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[999] animate-in fade-in duration-300">
       <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden border border-[#E5E0D8] animate-in slide-in-from-bottom-4 duration-500">
         
         {/* Header */}
@@ -240,6 +241,7 @@ export default function ReviewModal({ cook, onClose }) {
           </div>
 
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
