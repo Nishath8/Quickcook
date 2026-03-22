@@ -166,7 +166,7 @@ const updateCookStatus = async (req, res) => {
 // PUT /admin/cooks/:id
 const updateCookDetails = async (req, res) => {
   try {
-    const { name, location, cuisine, price_range, contact, dietary_preferences, availability, sample_menu } = req.body;
+    const { name, location, cuisine, price_range, contact, dietary_preferences, availability, sample_menu, profileImage } = req.body;
     const updateData = {};
     if (name) updateData.name = name;
     if (location) updateData.location = location;
@@ -176,6 +176,7 @@ const updateCookDetails = async (req, res) => {
     if (dietary_preferences) updateData.dietary_preferences = dietary_preferences;
     if (availability) updateData.availability = availability;
     if (sample_menu !== undefined) updateData.sample_menu = sample_menu;
+    if (profileImage !== undefined) updateData.profileImage = profileImage;
 
     const cook = await Cook.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!cook) return res.status(404).json({ message: 'Cook not found' });
@@ -195,7 +196,7 @@ const updateOwnProfile = async (req, res) => {
       return res.status(403).json({ message: 'You are not authorized to edit this profile' });
     }
 
-    const { name, location, cuisine, price_range, contact, images, dietary_preferences, availability, sample_menu } = req.body;
+    const { name, location, cuisine, price_range, contact, images, dietary_preferences, availability, sample_menu, profileImage } = req.body;
     let upData = {};
     if (name) upData.name = name;
     if (location) upData.location = location;
@@ -206,6 +207,7 @@ const updateOwnProfile = async (req, res) => {
     if (dietary_preferences) upData.dietary_preferences = dietary_preferences;
     if (availability) upData.availability = availability;
     if (sample_menu !== undefined) upData.sample_menu = sample_menu;
+    if (profileImage !== undefined) upData.profileImage = profileImage;
 
     const updatedCook = await Cook.findByIdAndUpdate(req.params.id, upData, { new: true });
     res.json({ message: 'Profile updated successfully', cook: updatedCook });
