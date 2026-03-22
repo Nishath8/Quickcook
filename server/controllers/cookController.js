@@ -1,4 +1,5 @@
 const Cook = require('../models/Cook');
+const Review = require('../models/Review');
 
 // In-memory rate limiting and utility helpers
 const submissionTracker = new Map();
@@ -102,7 +103,25 @@ const getApprovedCooks = async (req, res) => {
     if (price_range) filter.price_range = price_range;
     
     const cooks = await Cook.find(filter);
-    res.json(cooks);
+
+    // Fetch up to 4 vouchers for each cook to display in the UI
+    const cooksWithVouchers = await Promise.all(cooks.map(async (cook) => {
+      const voucherReviews = await Review.find({ cookId: cook._id, isVouch: true })
+        .populate('userId', 'name avatar')
+        .limit(4);
+      
+      const vouchers = voucherReviews.map(v => ({
+        name: v.userId?.name || 'Client',
+        avatar: v.userId?.avatar || ''
+      }));
+
+      return {
+        ...cook.toObject(),
+        vouchers
+      };
+    }));
+
+    res.json(cooksWithVouchers);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

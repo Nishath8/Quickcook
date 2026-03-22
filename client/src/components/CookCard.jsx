@@ -86,11 +86,23 @@ export default function CookCard({ cook }) {
         {cook.vouchCount > 0 && (
           <div className="bg-[#E4F2EA] rounded-2xl px-4 py-3 flex items-center gap-3 mb-6">
             <div className="flex -space-x-2">
-              {['R', 'S', 'A', 'P'].slice(0, Math.min(cook.vouchCount, 4)).map((init, i) => (
-                <div key={i} className="w-7 h-7 rounded-full border-2 border-[#E4F2EA] bg-[#1A6B4A] text-white text-[10px] flex items-center justify-center font-bold">
-                  {init}
-                </div>
-              ))}
+              {cook.vouchers && cook.vouchers.length > 0 ? (
+                cook.vouchers.map((voucher, i) => (
+                  <div key={i} className="w-7 h-7 rounded-full border-2 border-[#E4F2EA] bg-[#1A6B4A] overflow-hidden flex items-center justify-center">
+                    {voucher.avatar ? (
+                      <img src={voucher.avatar} alt={voucher.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-white text-[10px] font-bold">{voucher.name?.[0]}</span>
+                    )}
+                  </div>
+                ))
+              ) : (
+                ['R', 'S', 'A', 'P'].slice(0, Math.min(cook.vouchCount, 4)).map((init, i) => (
+                  <div key={i} className="w-7 h-7 rounded-full border-2 border-[#E4F2EA] bg-[#1A6B4A] text-white text-[10px] flex items-center justify-center font-bold">
+                    {init}
+                  </div>
+                ))
+              )}
             </div>
             <span className="text-[#1A6B4A] text-sm font-bold">Vouched by {cook.vouchCount} {cook.vouchCount === 1 ? 'client' : 'clients'}</span>
           </div>
