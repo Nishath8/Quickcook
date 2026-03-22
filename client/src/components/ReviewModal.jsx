@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { X, Star, MessageSquare, Trash2 } from 'lucide-react';
+import { X, Star, MessageSquare, Trash2, PlusCircle } from 'lucide-react';
 
 export default function ReviewModal({ cook, onClose }) {
   const { user, token } = useAuth();

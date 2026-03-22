@@ -177,17 +177,67 @@ export default function Admin() {
             </thead>
             <tbody className="divide-y divide-[#F7F4EE]">
               {cooks.map((cook) => (
-                <tr key={cook._id} className="hover:bg-[#FCFBF9] transition-colors group">
+                <tr key={cook._id} className={`${editingId === cook._id ? 'bg-[#F7F4EE]/50' : 'hover:bg-[#FCFBF9]'} transition-colors group`}>
                   <td className="px-8 py-6 whitespace-nowrap">
-                    <div className="text-base font-bold text-[#1A1917] group-hover:text-[#1A6B4A] transition-colors">{cook.name}</div>
+                    {editingId === cook._id ? (
+                      <input 
+                        value={editData.name} 
+                        onChange={(e) => handleEditChange(e, 'name')}
+                        className="w-full px-3 py-2 border border-[#E5E0D8] rounded-lg focus:ring-1 focus:ring-[#1A6B4A] outline-none text-sm font-bold bg-white"
+                      />
+                    ) : (
+                      <div className="text-base font-bold text-[#1A1917] group-hover:text-[#1A6B4A] transition-colors">{cook.name}</div>
+                    )}
                   </td>
                   <td className="px-8 py-6">
-                    <div className="text-sm font-medium text-[#3D3C39]">{cook.location}</div>
-                    <div className="text-xs text-[#A8A69F] mt-1 italic">{cook.cuisine}</div>
+                    {editingId === cook._id ? (
+                      <div className="space-y-2">
+                        <input 
+                          value={editData.location} 
+                          onChange={(e) => handleEditChange(e, 'location')}
+                          className="w-full px-3 py-2 border border-[#E5E0D8] rounded-lg focus:ring-1 focus:ring-[#1A6B4A] outline-none text-sm bg-white"
+                          placeholder="Location"
+                        />
+                        <input 
+                          value={editData.cuisine} 
+                          onChange={(e) => handleEditChange(e, 'cuisine')}
+                          className="w-full px-3 py-2 border border-[#E5E0D8] rounded-lg focus:ring-1 focus:ring-[#1A6B4A] outline-none text-xs bg-white italic"
+                          placeholder="Cuisine"
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <div className="text-sm font-medium text-[#3D3C39]">{cook.location}</div>
+                        <div className="text-xs text-[#A8A69F] mt-1 italic">{cook.cuisine}</div>
+                      </>
+                    )}
                   </td>
                   <td className="px-8 py-6">
-                    <div className="text-sm text-[#3D3C39] font-medium">{cook.contact || 'No contact'}</div>
-                    <div className="text-xs text-[#A8A69F] mt-1">{cook.price_range || 'No price'}</div>
+                    {editingId === cook._id ? (
+                      <div className="space-y-2">
+                        <input 
+                          value={editData.contact} 
+                          onChange={(e) => handleEditChange(e, 'contact')}
+                          className="w-full px-3 py-2 border border-[#E5E0D8] rounded-lg focus:ring-1 focus:ring-[#1A6B4A] outline-none text-sm bg-white"
+                          placeholder="Contact"
+                        />
+                        <select 
+                          value={editData.price_range} 
+                          onChange={(e) => handleEditChange(e, 'price_range')}
+                          className="w-full px-3 py-2 border border-[#E5E0D8] rounded-lg focus:ring-1 focus:ring-[#1A6B4A] outline-none text-xs bg-white"
+                        >
+                          <option value="$">$ (Value)</option>
+                          <option value="$$">$$ (Standard)</option>
+                          <option value="$$$">$$$ (Premium)</option>
+                          <option value="$$$$">$$$$ (Elite)</option>
+                        </select>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="text-sm text-[#3D3C39] font-medium">{cook.contact || 'No contact'}</div>
+                        <div className="text-xs text-[#A8A69F] mt-1">{cook.price_range || 'No price'}</div>
+                      </>
+                    )}
                   </td>
                   <td className="px-8 py-6">
                     <span className={`px-4 py-1.5 inline-flex text-[10px] leading-5 font-bold rounded-full uppercase tracking-tighter shadow-sm border ${
@@ -201,38 +251,57 @@ export default function Admin() {
                   </td>
                   <td className="px-8 py-6 text-right">
                     <div className="flex justify-end items-center gap-3">
-                      {cook.status === 'pending' && (
+                      {editingId === cook._id ? (
                         <>
                           <button
-                            onClick={() => updateCookStatus(cook._id, 'approved')}
+                            onClick={() => saveEdit(cook._id)}
                             className="bg-[#1A6B4A] text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#2D8C60] transition-all shadow-md active:scale-95"
                           >
-                            Approve
+                            Save
                           </button>
                           <button
-                            onClick={() => updateCookStatus(cook._id, 'denied')}
-                            className="bg-white text-[#7B3322] border border-[#F2DDD7] px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#FAECE7] transition-all active:scale-95"
+                            onClick={() => setEditingId(null)}
+                            className="bg-white text-[#6E6C67] border border-[#E5E0D8] px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#F7F4EE] transition-all active:scale-95"
                           >
-                            Deny
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          {cook.status === 'pending' && (
+                            <>
+                              <button
+                                onClick={() => updateCookStatus(cook._id, 'approved')}
+                                className="bg-[#1A6B4A] text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#2D8C60] transition-all shadow-md active:scale-95"
+                              >
+                                Approve
+                              </button>
+                              <button
+                                onClick={() => updateCookStatus(cook._id, 'denied')}
+                                className="bg-white text-[#7B3322] border border-[#F2DDD7] px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#FAECE7] transition-all active:scale-95"
+                              >
+                                Deny
+                              </button>
+                            </>
+                          )}
+                          
+                          <button
+                            onClick={() => handleEditClick(cook)}
+                            className="text-[#3D3C39] hover:text-[#1A1917] p-2 hover:bg-[#F7F4EE] rounded-lg transition-all"
+                            title="Edit Details"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                          </button>
+                          
+                          <button
+                            onClick={() => deleteCookFn(cook._id)}
+                            className="text-[#7B3322]/40 hover:text-[#7B3322] p-2 hover:bg-[#FAECE7] rounded-lg transition-all"
+                            title="Delete Permanently"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                           </button>
                         </>
                       )}
-                      
-                      <button
-                        onClick={() => handleEditClick(cook)}
-                        className="text-[#3D3C39] hover:text-[#1A1917] p-2 hover:bg-[#F7F4EE] rounded-lg transition-all"
-                        title="Edit Details"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                      </button>
-                      
-                      <button
-                        onClick={() => deleteCookFn(cook._id)}
-                        className="text-[#7B3322]/40 hover:text-[#7B3322] p-2 hover:bg-[#FAECE7] rounded-lg transition-all"
-                        title="Delete Permanently"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                      </button>
                     </div>
                   </td>
                 </tr>
