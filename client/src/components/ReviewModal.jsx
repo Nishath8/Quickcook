@@ -59,57 +59,62 @@ export default function ReviewModal({ cook, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[100]">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in duration-200">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[100] animate-in fade-in duration-300">
+      <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden border border-[#E5E0D8] animate-in slide-in-from-bottom-4 duration-500">
         
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <div className="px-8 py-6 border-b border-[#F7F4EE] flex justify-between items-center bg-[#F7F4EE]/50">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">{cook.name}'s Reviews</h2>
-            <p className="text-sm text-gray-500">{cook.cuisine} • {cook.location}</p>
+            <h2 className="text-2xl font-serif font-bold text-[#1A1917]">{cook.name}'s Reviews</h2>
+            <p className="text-sm text-[#6E6C67] mt-1 font-light italic">{cook.cuisine} • {cook.location}</p>
           </div>
-          <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-200 transition-colors">
+          <button 
+            onClick={onClose} 
+            className="p-2.5 text-[#A8A69F] hover:text-[#1A1917] rounded-full hover:bg-white transition-all shadow-sm active:scale-90"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content (Scrollable) */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-8 bg-white">
+        <div className="flex-1 overflow-y-auto p-8 space-y-10 bg-white custom-scrollbar">
           
           {/* Write a Review Section */}
-          <div className="bg-gray-50 p-5 rounded-lg border border-gray-100">
-            <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-              <MessageSquare className="w-4 h-4 mr-2 text-primary-500" />
-              Write a Review
+          <div className="bg-[#F7F4EE] p-6 rounded-3xl border border-[#E5E0D8] shadow-sm">
+            <h3 className="text-base font-serif font-bold text-[#1A1917] mb-6 flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
+                <MessageSquare className="w-4 h-4 text-[#1A6B4A]" />
+              </div>
+              Share Your Experience
             </h3>
             {user ? (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {error && <div className="p-3 text-sm text-red-600 bg-red-50 rounded-md border border-red-100">{error}</div>}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {error && <div className="p-4 text-xs font-bold text-[#7B3322] bg-[#FAECE7] rounded-xl border border-[#F2DDD7] animate-pulse">{error}</div>}
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
-                  <div className="flex space-x-2">
+                <div className="bg-white p-4 rounded-xl border border-[#E5E0D8]">
+                  <label className="block text-[10px] font-bold uppercase tracking-widest text-[#A8A69F] mb-3">Your Rating</label>
+                  <div className="flex space-x-3">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
                         key={star}
                         type="button"
                         onClick={() => setRating(star)}
-                        className="focus:outline-none transition-transform hover:scale-110"
+                        className="focus:outline-none transition-all hover:scale-125 active:scale-90"
                       >
-                        <Star className={`w-7 h-7 ${rating >= star ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+                        <Star className={`w-8 h-8 ${rating >= star ? 'text-[#C17B2A] fill-current' : 'text-[#E5E0D8]'}`} />
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Comment</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-widest text-[#A8A69F] mb-2 px-1">Detailed Feedback</label>
                   <textarea
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     rows={3}
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2 text-sm"
-                    placeholder="Describe your experience with this cook..."
+                    className="w-full rounded-2xl border-[#E5E0D8] focus:border-[#1A6B4A] focus:ring-1 focus:ring-[#1A6B4A] outline-none transition-all p-4 text-sm bg-white placeholder-[#A8A69F]"
+                    placeholder="Describe the flavors, punctuality, and service..."
                     required
                   />
                 </div>
@@ -118,63 +123,75 @@ export default function ReviewModal({ cook, onClose }) {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="bg-primary-600 hover:bg-primary-700 text-white px-5 py-2 rounded-md font-medium text-sm transition-colors disabled:opacity-50"
+                    className="bg-[#1A6B4A] hover:bg-[#2D8C60] text-white px-8 py-3 rounded-xl font-bold text-sm shadow-md transition-all active:scale-95 disabled:opacity-50"
                   >
-                    {submitting ? 'Submitting...' : 'Post Review'}
+                    {submitting ? 'Publishing...' : 'Submit Review'}
                   </button>
                 </div>
               </form>
             ) : (
-              <div className="text-center py-6 bg-white rounded-md border border-dashed border-gray-300">
-                <p className="text-gray-500 text-sm">Please sign in with Google to leave a review!</p>
+              <div className="text-center py-10 bg-white rounded-2xl border-2 border-dashed border-[#E5E0D8]">
+                <p className="text-[#6E6C67] text-sm font-light">Please sign in with Google to leave a review!</p>
               </div>
             )}
           </div>
 
           {/* Reviews List Section */}
           <div>
-            <h3 className="font-bold text-gray-900 mb-4 px-1">Recent Reviews ({reviews.length})</h3>
+            <div className="flex items-center justify-between mb-8 px-1">
+              <h3 className="text-xl font-serif font-bold text-[#1A1917]">Voice of Clients <span className="text-[#A8A69F] font-normal text-base ml-2">({reviews.length})</span></h3>
+            </div>
             
             {loading ? (
-              <p className="text-center text-gray-500 py-4 animate-pulse">Loading reviews...</p>
-            ) : reviews.length === 0 ? (
-              <p className="text-center text-gray-500 py-8 bg-gray-50 rounded-lg border border-gray-100">No reviews yet. Be the first to review!</p>
-            ) : (
               <div className="space-y-4">
+                <div className="h-24 bg-gray-50 rounded-2xl animate-pulse" />
+                <div className="h-24 bg-gray-50 rounded-2xl animate-pulse" />
+              </div>
+            ) : reviews.length === 0 ? (
+              <div className="text-center py-12 rounded-2xl border-2 border-dashed border-[#E5E0D8]">
+                <p className="text-[#A8A69F] font-serif italic">No stories shared yet. Be the first!</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
                 {reviews.map((review) => (
-                  <div key={review._id} className="bg-white p-4 rounded-lg border border-gray-100 shadow-sm relative group transition-colors hover:border-red-100">
+                  <div key={review._id} className="bg-white p-6 rounded-2xl border border-[#E5E0D8] hover:border-[#1A6B4A]/30 transition-all group relative">
                     {isAdmin && (
                       <button 
                         onClick={() => handleDeleteReview(review._id)}
-                        className="absolute top-3 right-3 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-all opacity-0 group-hover:opacity-100"
+                        className="absolute top-4 right-4 p-2 text-[#A8A69F] hover:text-[#7B3322] hover:bg-[#FAECE7] rounded-lg transition-all opacity-0 group-hover:opacity-100"
                         title="Delete Review (Admin Only)"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     )}
-                    <div className="flex items-center justify-between mb-2 pr-8">
-                      <div className="flex items-center space-x-2">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
                         {review.userId?.avatar ? (
-                          <img src={review.userId.avatar} alt="Avatar" className="w-6 h-6 rounded-full" />
+                          <img src={review.userId.avatar} alt="Avatar" className="w-9 h-9 rounded-full border border-[#E5E0D8]" referrerPolicy="no-referrer" />
                         ) : (
-                          <div className="w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center">
-                            <span className="text-xs text-primary-700 font-bold">{review.userId?.name?.charAt(0) || '?'}</span>
+                          <div className="w-9 h-9 rounded-full bg-[#F7F4EE] flex items-center justify-center border border-[#E5E0D8]">
+                            <span className="text-xs text-[#1A1917] font-bold uppercase">{review.userId?.name?.charAt(0) || '?'}</span>
                           </div>
                         )}
-                        <span className="text-sm font-medium text-gray-900">{review.userId?.name || 'Anonymous User'}</span>
+                        <div>
+                          <p className="text-sm font-bold text-[#1A1917]">{review.userId?.name || 'Quickcook Client'}</p>
+                          <div className="flex items-center mt-0.5">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star key={star} className={`w-3 h-3 ${review.rating >= star ? 'text-[#C17B2A] fill-current' : 'text-[#E5E0D8]'}`} />
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                      <span className="text-xs text-gray-400">
-                        {new Date(review.createdAt).toLocaleDateString()}
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-[#A8A69F]">
+                        {new Date(review.createdAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </span>
                     </div>
                     
-                    <div className="flex mb-2">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className={`w-3.5 h-3.5 ${review.rating >= star ? 'text-yellow-400 fill-current' : 'text-gray-200'}`} />
-                      ))}
-                    </div>
-                    
-                    {review.comment && <p className="text-sm text-gray-600 mt-2">{review.comment}</p>}
+                    {review.comment && (
+                      <p className="text-sm text-[#3D3C39] leading-relaxed font-light italic pl-12 border-l-2 border-[#1A6B4A]/10 ml-4 py-1">
+                        "{review.comment}"
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>

@@ -122,93 +122,163 @@ export default function CookDashboard() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900">Provider Dashboard</h1>
-        <p className="text-gray-500 mt-2">Manage your cook profile, update availability, and upload proof of work.</p>
+    <div className="max-w-5xl mx-auto px-6 py-12 animate-fade-in-up">
+      <div className="mb-12 border-b border-[#E5E0D8] pb-10">
+        <h1 className="text-5xl font-serif font-bold text-[#1A1917] mb-3">Provider Dashboard</h1>
+        <p className="text-[#6E6C67] text-lg font-light tracking-wide italic">Manage your cook profile, update availability, and upload proof of work.</p>
       </div>
 
       {message.text && (
-        <div className={`p-4 mb-6 border rounded-lg font-medium text-sm flex items-center ${message.type === 'success' ? 'bg-green-50 text-green-800 border-green-200' : 'bg-red-50 text-red-800 border-red-200'}`}>
-          {message.text}
+        <div className={`mb-10 p-5 rounded-2xl flex items-center border shadow-sm ${
+          message.type === 'success' ? 'bg-[#E4F2EA] text-[#1A6B4A] border-[#CEEBDC]' : 'bg-[#FAECE7] text-[#7B3322] border-[#F2DDD7]'
+        }`}>
+          {message.type === 'success' ? <div className="bg-[#1A6B4A] p-1 rounded-full mr-3 text-white"><CheckCircle className="w-4 h-4" /></div> : <AlertCircle className="w-5 h-5 mr-3 shrink-0" />}
+          <span className="font-semibold text-sm">{message.text}</span>
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
-        {/* Left Col: Edits */}
-        <div className="md:col-span-2 space-y-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900 mb-5">Profile Information</h2>
-            <form onSubmit={handleUpdate} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                  <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full border-gray-300 rounded-lg p-2.5 border focus:ring-primary-500 focus:border-primary-500" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                  <input type="text" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} className="w-full border-gray-300 rounded-lg p-2.5 border focus:ring-primary-500 focus:border-primary-500" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Cuisine</label>
-                  <input type="text" value={formData.cuisine} onChange={e => setFormData({...formData, cuisine: e.target.value})} className="w-full border-gray-300 rounded-lg p-2.5 border focus:ring-primary-500 focus:border-primary-500" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Contact Phone</label>
-                  <input type="text" value={formData.contact} onChange={e => setFormData({...formData, contact: e.target.value})} className="w-full border-gray-300 rounded-lg p-2.5 border focus:ring-primary-500 focus:border-primary-500" required />
-                </div>
-                <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Price Range</label>
-                  <input type="text" value={formData.price_range} onChange={e => setFormData({...formData, price_range: e.target.value})} className="w-full border-gray-300 rounded-lg p-2.5 border focus:ring-primary-500 focus:border-primary-500" placeholder="e.g. ₹380–480 / meal" required />
-                </div>
-              </div>
-              <button type="submit" disabled={saving} className="bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors mt-2 disabled:opacity-50">
-                {saving ? 'Saving...' : 'Save Changes'}
-              </button>
-            </form>
-          </div>
-        </div>
-
-        {/* Right Col: Images */}
-        <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-              <Camera className="w-5 h-5 mr-2 text-primary-500" /> Image Portfolio
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        {/* Profile Info Form */}
+        <div className="lg:col-span-2">
+          <div className="bg-white p-10 rounded-[32px] border border-[#E5E0D8] shadow-sm">
+            <h2 className="text-2xl font-serif font-bold text-[#1A1917] mb-10 flex items-center gap-3">
+              <span className="w-8 h-8 rounded-lg bg-[#F7F4EE] flex items-center justify-center text-sm font-sans">01</span>
+              Secretariat / Profile Info
             </h2>
-            <p className="text-sm text-gray-500 mb-4">Upload pictures of your dishes to attract more clients.</p>
-            
-            <form onSubmit={handleImageUpload} className="mb-6 space-y-3">
-              <input 
-                type="file" 
-                accept="image/*" 
-                onChange={(e) => setUploadFile(e.target.files[0])}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 cursor-pointer"
-              />
-              <button 
-                type="submit" 
-                disabled={!uploadFile || uploading}
-                className="w-full bg-[#1C1A17] hover:bg-black text-white py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 flex items-center justify-center"
-              >
-                {uploading ? 'Uploading...' : <><UploadCloud className="w-4 h-4 mr-2"/> Upload Photo</>}
-              </button>
-            </form>
-
-            <div className="grid grid-cols-2 gap-2">
-              {profile.images && profile.images.map((imgUrl, i) => (
-                <div key={i} className="aspect-square bg-gray-100 rounded-lg overflow-hidden border border-gray-200 relative group">
-                  <img src={`${import.meta.env.VITE_API_BASE_URL}${imgUrl}`} alt="dish" className="w-full h-full object-cover" />
-                </div>
-              ))}
-            </div>
-            {(!profile.images || profile.images.length === 0) && (
-              <div className="text-center bg-gray-50 py-6 rounded-lg border border-dashed border-gray-200">
-                <p className="text-xs text-gray-400">No images uploaded yet</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div className="sm:col-span-2">
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-3 block">Professional Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="w-full px-6 py-4.5 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all text-[#1A1917] bg-[#F7F4EE]/20 font-medium"
+                />
               </div>
-            )}
+
+              <div>
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-3 block">City / Neighborhood</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  className="w-full px-6 py-4.5 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all text-[#1A1917] bg-[#F7F4EE]/20 font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-3 block">Verified Specialties</label>
+                <input
+                  type="text"
+                  name="cuisine"
+                  value={formData.cuisine}
+                  onChange={handleInputChange}
+                  className="w-full px-6 py-4.5 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all text-[#1A1917] bg-[#F7F4EE]/20 font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-3 block">Public Contact</label>
+                <input
+                  type="text"
+                  name="contact"
+                  value={formData.contact}
+                  onChange={handleInputChange}
+                  className="w-full px-6 py-4.5 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all text-[#1A1917] bg-[#F7F4EE]/20 font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-3 block">Price Indicator</label>
+                <select
+                  name="price_range"
+                  value={formData.price_range}
+                  onChange={handleInputChange}
+                  className="w-full px-6 py-4.5 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all text-[#1A1917] bg-[#F7F4EE]/20 font-medium"
+                >
+                  <option value="$">$ (Value)</option>
+                  <option value="$$">$$ (Standard)</option>
+                  <option value="$$$">$$$ (Premium)</option>
+                  <option value="$$$$">$$$$ (Elite)</option>
+                </select>
+              </div>
+            </div>
+
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="mt-12 bg-[#1A1917] hover:bg-black text-white px-10 py-5 rounded-2xl font-bold transition-all shadow-lg hover:shadow-xl active:scale-95 flex items-center gap-3 disabled:opacity-50"
+            >
+              {saving ? 'Saving...' : 'Commit Changes'}
+              {!saving && <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>}
+            </button>
           </div>
         </div>
 
+        {/* Portfolio / Images */}
+        <div>
+          <div className="bg-[#F7F4EE] p-8 rounded-[32px] border border-[#E5E0D8] sticky top-24">
+            <h2 className="text-xl font-serif font-bold text-[#1A1917] mb-8 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center">
+                <ImageIcon className="w-5 h-5 text-[#1A6B4A]" />
+              </div>
+              Portfolio Gallery
+            </h2>
+            <p className="text-[#6E6C67] text-sm mb-8 leading-relaxed font-light">
+              Upload stunning pictures of your dishes to attract more discerning clients.
+            </p>
+
+            <div className="space-y-4">
+              <input
+                type="file"
+                id="image-upload"
+                onChange={handleFileChange}
+                className="hidden"
+                accept="image/*"
+              />
+              <label 
+                htmlFor="image-upload"
+                className="w-full flex items-center justify-center p-4 border-2 border-dashed border-[#E5E0D8] rounded-2xl cursor-pointer hover:border-[#1A6B4A] hover:bg-white transition-all group"
+              >
+                <div className="text-center">
+                  <Upload className="w-5 h-5 mx-auto text-[#6E6C67] group-hover:text-[#1A6B4A] mb-2" />
+                  <span className="text-xs font-bold text-[#6E6C67] group-hover:text-[#1A1917]">
+                    {selectedFile ? selectedFile.name : 'Choose Masterpiece'}
+                  </span>
+                </div>
+              </label>
+
+              <button
+                onClick={handleUpload}
+                disabled={!selectedFile || uploadLoading}
+                className="w-full bg-[#1A6B4A] text-white p-4.5 rounded-2xl font-bold text-sm shadow-md hover:bg-[#2D8C60] transition-all active:scale-[0.98] disabled:opacity-40"
+              >
+                {uploadLoading ? 'Uploading...' : 'Publish Photo'}
+              </button>
+            </div>
+
+            <div className="mt-10 pt-8 border-t border-[#E5E0D8]">
+              <div className="grid grid-cols-2 gap-4">
+                {profile.images && profile.images.length > 0 ? profile.images.map((img, i) => (
+                  <div key={i} className="aspect-square rounded-2xl border border-[#E5E0D8] overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow group relative">
+                    <img 
+                      src={`${import.meta.env.VITE_API_BASE_URL}${img}`} 
+                      alt={`Food ${i}`} 
+                      className="w-full h-full object-cover transition-transform group-hover:scale-110" 
+                    />
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                )) : (
+                  <div className="col-span-2 py-10 text-center border-2 border-dashed border-[#E5E0D8] rounded-2xl">
+                    <p className="text-xs text-[#A8A69F] font-serif italic">Gallery empty</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -51,12 +51,12 @@ export default function AddCook() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-12 px-4">
-      <div className="mb-8 text-center">
-        <h1 style={{fontSize: '32px', fontWeight: 'bold', color: 'var(--ink)'}}>
+    <div className="max-w-2xl mx-auto py-12 px-4 animate-fade-in-up">
+      <div className="mb-10 text-center">
+        <h1 className="text-4xl font-serif font-bold text-[#1A1917]">
           Register your services
         </h1>
-        <p style={{color: 'var(--ink4)', marginTop: '8px', fontSize: '16px'}}>
+        <p className="text-[#6E6C67] mt-3 text-lg font-light italic">
           Join the marketplace and let clients find you easily.
         </p>
       </div>
@@ -78,94 +78,85 @@ export default function AddCook() {
         )}
 
         {!user ? (
-          <div className="p-8 text-center bg-white rounded-2xl border border-[#E5E0D8]">
-            <ChefHat className="w-16 h-16 mx-auto mb-4" color="var(--ink4)" />
-            <h2 style={{fontSize: '20px', fontWeight: 'bold', color: 'var(--ink)', marginBottom: '8px'}}>Sign in to continue</h2>
-            <p style={{color: 'var(--ink4)', marginBottom: '24px', fontSize: '14px'}}>
-              We securely link your profile to your Google account so you can update your menu, track views, and manage reviews later without a password.
+          <div className="p-10 text-center bg-white rounded-3xl border border-[#E5E0D8] shadow-sm">
+            <div className="w-20 h-20 bg-[#FBF0DF] rounded-full flex items-center justify-center mx-auto mb-6">
+              <ChefHat className="w-10 h-10 text-[#C17B2A]" />
+            </div>
+            <h2 className="text-2xl font-serif font-bold text-[#1A1917] mb-3">Sign in to continue</h2>
+            <p className="text-[#6E6C67] mb-8 text-sm leading-relaxed max-w-sm mx-auto">
+              We securely link your profile to your Google account so you can update your menu and manage reviews later without a password.
             </p>
             <button 
               onClick={() => gLogin()}
-              style={{
-                backgroundColor: 'var(--ink)',
-                color: 'white',
-                padding: '12px 24px',
-                borderRadius: '12px',
-                fontWeight: 500,
-                display: 'inline-flex',
-                alignItems: 'center',
-                transition: 'background-color 0.2s'
-              }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#000'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--ink)'}
+              className="bg-[#1A1917] hover:bg-black text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center mx-auto transition-all shadow-lg hover:shadow-xl active:scale-95"
             >
-              <div className="bg-white p-1 rounded-full mr-3 shrink-0">
+              <div className="bg-white p-1.5 rounded-full mr-3 shrink-0 shadow-sm">
                 <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
               </div>
-              Sign in with Google
+              Continue with Google
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-5 bg-white p-8 rounded-2xl border border-[#E5E0D8]">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <form onSubmit={handleSubmit} className="space-y-6 bg-white p-10 rounded-3xl border border-[#E5E0D8] shadow-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="sm:col-span-2">
-                <label style={{color: 'var(--ink3)', fontSize: '13px', fontWeight: 500, marginBottom: '6px', display: 'block'}}>Full Name</label>
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-2 block">Full Name</label>
                 <input
                   type="text"
                   name="name"
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-1 focus:ring-[var(--ink)] focus:border-[var(--ink)] outline-none transition-all placeholder-gray-400 text-gray-900"
-                  placeholder="e.g. Gordon Ramsay"
+                  className="w-full px-5 py-4 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all placeholder-[#A8A69F] text-[#1A1917] bg-[#F7F4EE]/30"
+                  placeholder="Chef Name"
                 />
               </div>
 
               <div>
-                <label style={{color: 'var(--ink3)', fontSize: '13px', fontWeight: 500, marginBottom: '6px', display: 'block'}}>Location</label>
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-2 block">City / Area</label>
                 <input
                   type="text"
                   name="location"
                   required
                   value={formData.location}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-1 focus:ring-[var(--ink)] focus:border-[var(--ink)] outline-none transition-all placeholder-gray-400 text-gray-900"
-                  placeholder="e.g. Koramangala, Bengaluru"
+                  className="w-full px-5 py-4 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all placeholder-[#A8A69F] text-[#1A1917] bg-[#F7F4EE]/30"
+                  placeholder="e.g. Indiranagar"
                 />
               </div>
 
               <div>
-                <label style={{color: 'var(--ink3)', fontSize: '13px', fontWeight: 500, marginBottom: '6px', display: 'block'}}>Price Range</label>
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-2 block">Price Range</label>
                 <select
                   name="price_range"
                   required
                   value={formData.price_range}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-1 focus:ring-[var(--ink)] focus:border-[var(--ink)] outline-none transition-all text-gray-900 bg-white"
+                  className="w-full px-5 py-4 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all text-[#1A1917] bg-[#F7F4EE]/30"
                 >
-                  <option value="" disabled>Select a range</option>
-                  <option value="$">$ (Inexpensive)</option>
-                  <option value="$$">$$ (Moderate)</option>
-                  <option value="$$$">$$$ (Expensive)</option>
-                  <option value="$$$$">$$$$ (Very Expensive)</option>
+                  <option value="" disabled>Select range</option>
+                  <option value="$">$ (Value)</option>
+                  <option value="$$">$$ (Standard)</option>
+                  <option value="$$$">$$$ (Premium)</option>
+                  <option value="$$$$">$$$$ (Elite)</option>
                 </select>
               </div>
 
               <div className="sm:col-span-2">
-                <label style={{color: 'var(--ink3)', fontSize: '13px', fontWeight: 500, marginBottom: '6px', display: 'block'}}>Cuisine Specialties</label>
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-2 block">Cuisine Specialties</label>
                 <input
                   type="text"
                   name="cuisine"
                   required
                   value={formData.cuisine}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-1 focus:ring-[var(--ink)] focus:border-[var(--ink)] outline-none transition-all placeholder-gray-400 text-gray-900"
-                  placeholder="e.g. Italian, Continental, Baking"
+                  className="w-full px-5 py-4 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all placeholder-[#A8A69F] text-[#1A1917] bg-[#F7F4EE]/30"
+                  placeholder="e.g. Italian, Thai, Desi"
                 />
               </div>
 
               <div className="sm:col-span-2">
-                <label style={{color: 'var(--ink3)', fontSize: '13px', fontWeight: 500, marginBottom: '6px', display: 'block'}}>Phone Number</label>
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-2 block">Public Phone Number</label>
                 <input
                   type="tel"
                   name="contact"
@@ -174,32 +165,19 @@ export default function AddCook() {
                   title="Please enter a valid phone number"
                   value={formData.contact}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-1 focus:ring-[var(--ink)] focus:border-[var(--ink)] outline-none transition-all placeholder-gray-400 text-gray-900"
-                  placeholder="e.g. +91 98765 43210"
+                  className="w-full px-5 py-4 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all placeholder-[#A8A69F] text-[#1A1917] bg-[#F7F4EE]/30"
+                  placeholder="+91 ...."
                 />
               </div>
             </div>
 
-            <div className="pt-4 mt-2">
+            <div className="pt-6">
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                style={{
-                  backgroundColor: 'var(--green)',
-                  color: 'white',
-                  width: '100%',
-                  padding: '14px',
-                  borderRadius: '12px',
-                  fontWeight: 'bold',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  transition: 'opacity 0.2s',
-                  opacity: status === 'loading' ? 0.7 : 1,
-                  cursor: status === 'loading' ? 'not-allowed' : 'pointer'
-                }}
+                className="w-full bg-[#1A6B4A] hover:bg-[#2D8C60] text-white py-4.5 rounded-2xl font-bold flex justify-center items-center transition-all shadow-lg hover:shadow-xl active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {status === 'loading' ? 'Submitting...' : 'Submit Profile'}
+                {status === 'loading' ? 'Creating Profile...' : 'Submit Application'}
               </button>
             </div>
           </form>
