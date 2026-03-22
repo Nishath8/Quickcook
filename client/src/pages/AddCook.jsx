@@ -156,11 +156,11 @@ export default function AddCook() {
                   onChange={handleChange}
                   className="w-full px-5 py-4 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all text-[#1A1917] bg-[#F7F4EE]/30"
                 >
-                  <option value="" disabled>Select range</option>
-                  <option value="$">$ (Value)</option>
-                  <option value="$$">$$ (Standard)</option>
-                  <option value="$$$">$$$ (Premium)</option>
-                  <option value="$$$$">$$$$ (Elite)</option>
+                  <option value="">Select range</option>
+                  <option value="₹250 - ₹500">₹250 - ₹500 (Value)</option>
+                  <option value="₹500 - ₹1,000">₹500 - ₹1,000 (Standard)</option>
+                  <option value="₹1,000 - ₹2,000">₹1,000 - ₹2,000 (Premium)</option>
+                  <option value="₹2,000+">₹2,000+ (Elite)</option>
                 </select>
               </div>
 

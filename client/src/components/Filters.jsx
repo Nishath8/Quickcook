@@ -44,6 +44,21 @@ export default function Filters({ filters, onFilterChange }) {
             <option value="Jain">Jain</option>
           </select>
         </div>
+        <div className="search-field">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 1v14M4 5h8M4 10h8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>
+          <select
+            name="price_range"
+            value={filters.price_range || ''}
+            onChange={handleChange}
+            className="bg-transparent border-none outline-none text-sm text-[#1A1917] flex-1 cursor-pointer"
+          >
+            <option value="">Any Price</option>
+            <option value="₹250 - ₹500">₹250 - ₹500</option>
+            <option value="₹500 - ₹1,000">₹500 - ₹1,000</option>
+            <option value="₹1,000 - ₹2,000">₹1,000 - ₹2,000</option>
+            <option value="₹2,000+">₹2,000+</option>
+          </select>
+        </div>
       </div>
     </div>
   );

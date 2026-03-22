@@ -68,7 +68,7 @@ export default function CookProfile() {
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-gray-300 font-medium">
                 <span className="flex items-center"><Utensils className="w-4 h-4 mr-1.5 opacity-70" /> {cook.cuisine}</span>
                 <span className="flex items-center"><MapPin className="w-4 h-4 mr-1.5 opacity-70" /> {cook.location}</span>
-                <span className="flex items-center"><DollarSign className="w-4 h-4 mr-0.5 opacity-70" /> {cook.price_range} per meal</span>
+                <span className="flex items-center"><DollarSign className="w-4 h-4 mr-0.5 opacity-70" /> {cook.price_range}</span>
                 {cook.dietary_preferences?.length > 0 && (
                   <span className="flex items-center gap-1.5">
                     <span className="opacity-50">•</span>

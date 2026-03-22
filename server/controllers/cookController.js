@@ -94,11 +94,12 @@ const createCook = async (req, res) => {
 // GET /cooks
 const getApprovedCooks = async (req, res) => {
   try {
-    const { location, cuisine, dietary } = req.query;
+    const { location, cuisine, dietary, price_range } = req.query;
     const filter = { status: 'approved' };
     if (location) filter.location = { $regex: location, $options: 'i' };
     if (cuisine) filter.cuisine = { $regex: cuisine, $options: 'i' };
     if (dietary) filter.dietary_preferences = { $in: dietary.split(',') };
+    if (price_range) filter.price_range = price_range;
     
     const cooks = await Cook.find(filter);
     res.json(cooks);
