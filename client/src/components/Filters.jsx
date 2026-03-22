@@ -7,7 +7,6 @@ export default function Filters({ filters, onFilterChange }) {
   };
 
   return (
-  return (
     <div className="search-section w-full mb-8">
       <div className="search-inner flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4">
         <div className="search-field flex-1 h-[52px]">
