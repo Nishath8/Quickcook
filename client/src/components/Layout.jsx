@@ -28,7 +28,7 @@ export default function Layout() {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="nav-right hidden md:flex">
+        <div className="hidden md:flex items-center space-x-2">
           <Link className="nav-link" to="/">Find a cook</Link>
           <Link className="nav-link" to="/add">Add Cook</Link>
           {user && <Link className="nav-link" to="/dashboard">Dashboard</Link>}
@@ -94,24 +94,45 @@ export default function Layout() {
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 top-[60px] bg-white z-[90] md:hidden animate-in fade-in slide-in-from-top-4 duration-300">
-          <div className="flex flex-col p-6 space-y-4">
-            <Link className="text-xl font-serif font-bold text-[#1A1917] p-4 bg-[#F7F4EE] rounded-2xl" to="/" onClick={() => setMobileMenuOpen(false)}>Find a cook</Link>
-            <Link className="text-xl font-serif font-bold text-[#1A1917] p-4 bg-[#F7F4EE] rounded-2xl" to="/add" onClick={() => setMobileMenuOpen(false)}>Add Your Services</Link>
-            {user && <Link className="text-xl font-serif font-bold text-[#1A1917] p-4 bg-[#F7F4EE] rounded-2xl" to="/dashboard" onClick={() => setMobileMenuOpen(false)}>Provider Dashboard</Link>}
-            <Link className="text-xl font-serif font-bold text-[#1A1917] p-4 bg-[#F7F4EE] rounded-2xl" to="/admin" onClick={() => setMobileMenuOpen(false)}>Admin Panel</Link>
+        <div className="fixed inset-0 bg-white z-[150] md:hidden animate-in fade-in slide-in-from-right duration-300">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center justify-between p-6 border-bottom border-[#E5E0D8]">
+               <Link className="nav-logo" to="/" onClick={() => setMobileMenuOpen(false)}>
+                <div className="nav-logo-mark">
+                  <svg viewBox="0 0 18 18" fill="none"><path d="M9 2C6.24 2 4 4.24 4 7c0 2 1.2 3.73 2.93 4.55L6 15h6l-.93-3.45A5 5 0 0 0 14 7c0-2.76-2.24-5-5-5z" stroke="white" strokeWidth="1.3" strokeLinejoin="round"/><path d="M7 15h4" stroke="white" strokeWidth="1.3" strokeLinecap="round"/></svg>
+                </div>
+                <span className="font-serif">Quickcook</span>
+              </Link>
+              <button onClick={() => setMobileMenuOpen(false)} className="p-2"><X className="w-8 h-8" /></button>
+            </div>
             
-            {user && (
-              <button 
-                onClick={() => { logout(); setMobileMenuOpen(false); }}
-                className="mt-8 text-[#7B3322] font-bold p-4 flex items-center gap-2"
-              >
-                <LogOut className="w-5 h-5" /> Sign Out
-              </button>
-            )}
+            <div className="flex flex-col p-6 space-y-2">
+              <Link className="text-2xl font-serif font-bold text-[#1A1917] p-4 hover:bg-[#F7F4EE] rounded-2xl transition-colors" to="/" onClick={() => setMobileMenuOpen(false)}>Find a cook</Link>
+              <Link className="text-2xl font-serif font-bold text-[#1A1917] p-4 hover:bg-[#F7F4EE] rounded-2xl transition-colors" to="/add" onClick={() => setMobileMenuOpen(false)}>Add Your Services</Link>
+              {user && <Link className="text-2xl font-serif font-bold text-[#1A1917] p-4 hover:bg-[#F7F4EE] rounded-2xl transition-colors" to="/dashboard" onClick={() => setMobileMenuOpen(false)}>Provider Dashboard</Link>}
+              <Link className="text-2xl font-serif font-bold text-[#1A1917] p-4 hover:bg-[#F7F4EE] rounded-2xl transition-colors" to="/admin" onClick={() => setMobileMenuOpen(false)}>Admin Panel</Link>
+              
+              {!user && (
+                <button 
+                  onClick={() => { gLogin(); setMobileMenuOpen(false); }}
+                  className="mt-4 bg-[#1A1917] text-white p-5 rounded-2xl font-black text-center"
+                >
+                  Sign in with Google
+                </button>
+              )}
+
+              {user && (
+                <button 
+                  onClick={() => { logout(); setMobileMenuOpen(false); }}
+                  className="mt-8 text-[#7B3322] font-black p-4 flex items-center gap-2 border-t border-[#E5E0D8]"
+                >
+                  <LogOut className="w-5 h-5" /> Sign Out
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      )/* Main Content */}
+      )}
       <main className="flex-1 w-full max-w-7xl mx-auto py-8">
         <Outlet />
       </main>

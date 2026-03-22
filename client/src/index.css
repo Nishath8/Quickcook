@@ -158,9 +158,9 @@ nav.custom-nav {
 .hero-h1 {
   font-family: var(--serif);
   font-size: clamp(2.4rem, 5vw, 3.6rem);
-  font-weight: 400; line-height: 1.15;
+  font-weight: 400; line-height: 1.1;
   color: var(--ink); margin-bottom: 1.25rem;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 .hero-h1 em {
   font-style: italic; color: var(--green);
@@ -588,10 +588,10 @@ footer.custom-footer {
 }
 
 @media (max-width: 640px) {
-  .section { padding: 3rem 1.25rem; }
-  .section-h2 { font-size: 1.8rem; }
+  .section { padding: 4rem 1.5rem; }
+  .section-h2 { font-size: 2rem; }
   .cards-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-  .search-inner { flex-direction: column; }
+  .search-inner { flex-direction: column; width: 100%; }
   .search-field { width: 100%; border-radius: var(--r-sm); }
   
   /* Modal responsive */
@@ -604,10 +604,18 @@ footer.custom-footer {
 }
 
 @media (max-width: 480px) {
-  .hero-h1 { font-size: 2.2rem; }
-  .hero-cta .btn-primary, .hero-cta .btn-ghost { width: 100%; justify-content: center; }
-  .hero-trust { display: grid; grid-template-columns: 1fr; gap: 8px; border: none; padding-top: 1rem; }
+  .hero { 
+    padding-top: 6rem; /* Extra space for fixed header */
+    padding-bottom: 3rem;
+  }
+  .hero-h1 { font-size: 2.4rem; line-height: 1.05; }
+  .hero-sub { font-size: 16px; margin-bottom: 1.5rem; }
+  .hero-cta .btn-primary, .hero-cta .btn-ghost { width: 100%; justify-content: center; padding: 16px; }
+  .hero-trust { display: grid; grid-template-columns: 1fr; gap: 12px; border: none; padding-top: 1.5rem; }
   .nav-logo { font-size: 18px; }
+  
+  .search-section { padding: 1.5rem; }
+  .search-btn { width: 100%; }
 }
 
 /* ── UTILS ── */
