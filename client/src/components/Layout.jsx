@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { ChefHat, PlusCircle, Home, ShieldCheck, LogOut, Menu, X } from 'lucide-react';
+import { ChefHat, PlusCircle, Home, ShieldCheck, LogOut, Menu, X, LayoutDashboard, Search } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
@@ -95,40 +95,82 @@ export default function Layout() {
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 bg-white z-[150] md:hidden animate-in fade-in slide-in-from-right duration-300">
-          <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between p-6 border-bottom border-[#E5E0D8]">
+          <div className="flex flex-col h-full bg-[#FDFCFB]">
+            <div className="flex items-center justify-between p-6 bg-white border-b border-[#E5E0D8]">
                <Link className="nav-logo" to="/" onClick={() => setMobileMenuOpen(false)}>
                 <div className="nav-logo-mark">
                   <svg viewBox="0 0 18 18" fill="none"><path d="M9 2C6.24 2 4 4.24 4 7c0 2 1.2 3.73 2.93 4.55L6 15h6l-.93-3.45A5 5 0 0 0 14 7c0-2.76-2.24-5-5-5z" stroke="white" strokeWidth="1.3" strokeLinejoin="round"/><path d="M7 15h4" stroke="white" strokeWidth="1.3" strokeLinecap="round"/></svg>
                 </div>
                 <span className="font-serif">Quickcook</span>
               </Link>
-              <button onClick={() => setMobileMenuOpen(false)} className="p-2"><X className="w-8 h-8" /></button>
+              <button onClick={() => setMobileMenuOpen(false)} className="p-2 bg-[#F7F4EE] rounded-full"><X className="w-6 h-6 text-[#1A1917]" /></button>
             </div>
             
-            <div className="flex flex-col p-6 space-y-2">
-              <Link className="text-2xl font-serif font-bold text-[#1A1917] p-4 hover:bg-[#F7F4EE] rounded-2xl transition-colors" to="/" onClick={() => setMobileMenuOpen(false)}>Find a cook</Link>
-              <Link className="text-2xl font-serif font-bold text-[#1A1917] p-4 hover:bg-[#F7F4EE] rounded-2xl transition-colors" to="/add" onClick={() => setMobileMenuOpen(false)}>Add Your Services</Link>
-              {user && <Link className="text-2xl font-serif font-bold text-[#1A1917] p-4 hover:bg-[#F7F4EE] rounded-2xl transition-colors" to="/dashboard" onClick={() => setMobileMenuOpen(false)}>Provider Dashboard</Link>}
-              <Link className="text-2xl font-serif font-bold text-[#1A1917] p-4 hover:bg-[#F7F4EE] rounded-2xl transition-colors" to="/admin" onClick={() => setMobileMenuOpen(false)}>Admin Panel</Link>
-              
-              {!user && (
-                <button 
-                  onClick={() => { gLogin(); setMobileMenuOpen(false); }}
-                  className="mt-4 bg-[#1A1917] text-white p-5 rounded-2xl font-black text-center"
-                >
-                  Sign in with Google
-                </button>
-              )}
+            <div className="flex flex-col p-6 space-y-3 overflow-y-auto">
+              <Link 
+                className={`flex items-center gap-4 text-xl font-bold p-5 rounded-[24px] transition-all ${location.pathname === '/' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
+                to="/" 
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ fontFamily: 'var(--sans)' }}
+              >
+                <Search className={`w-6 h-6 ${location.pathname === '/' ? 'text-white' : 'text-[#A8A69F]'}`} />
+                Find a cook
+              </Link>
+
+              <Link 
+                className={`flex items-center gap-4 text-xl font-bold p-5 rounded-[24px] transition-all ${location.pathname === '/add' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
+                to="/add" 
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ fontFamily: 'var(--sans)' }}
+              >
+                <PlusCircle className={`w-6 h-6 ${location.pathname === '/add' ? 'text-white' : 'text-[#A8A69F]'}`} />
+                Add Your Services
+              </Link>
 
               {user && (
-                <button 
-                  onClick={() => { logout(); setMobileMenuOpen(false); }}
-                  className="mt-8 text-[#7B3322] font-black p-4 flex items-center gap-2 border-t border-[#E5E0D8]"
+                <Link 
+                  className={`flex items-center gap-4 text-xl font-bold p-5 rounded-[24px] transition-all ${location.pathname === '/dashboard' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
+                  to="/dashboard" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ fontFamily: 'var(--sans)' }}
                 >
-                  <LogOut className="w-5 h-5" /> Sign Out
-                </button>
+                  <LayoutDashboard className={`w-6 h-6 ${location.pathname === '/dashboard' ? 'text-white' : 'text-[#A8A69F]'}`} />
+                  Provider Dashboard
+                </Link>
               )}
+
+              <Link 
+                className={`flex items-center gap-4 text-xl font-bold p-5 rounded-[24px] transition-all ${location.pathname === '/admin' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
+                to="/admin" 
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ fontFamily: 'var(--sans)' }}
+              >
+                <ShieldCheck className={`w-6 h-6 ${location.pathname === '/admin' ? 'text-white' : 'text-[#A8A69F]'}`} />
+                Admin Panel
+              </Link>
+              
+              <div className="pt-6 mt-6 border-t border-[#E5E0D8]">
+                {!user ? (
+                  <button 
+                    onClick={() => { gLogin(); setMobileMenuOpen(false); }}
+                    className="w-full bg-[#1A1917] text-white p-5 rounded-[24px] font-bold flex items-center justify-center gap-3 shadow-xl active:scale-95 transition-all"
+                    style={{ fontFamily: 'var(--sans)' }}
+                  >
+                    <div className="bg-white p-1.5 rounded-full flex items-center justify-center shadow-sm">
+                      <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+                    </div>
+                    Sign in with Google
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => { logout(); setMobileMenuOpen(false); }}
+                    className="w-full flex items-center justify-center gap-3 text-[#7B3322] font-bold p-5 rounded-[24px] hover:bg-[#FAECE7] transition-all"
+                    style={{ fontFamily: 'var(--sans)' }}
+                  >
+                    <LogOut className="w-5 h-5" /> Sign Out
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
