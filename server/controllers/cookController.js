@@ -194,6 +194,21 @@ const deleteCook = async (req, res) => {
   }
 };
 
+// POST /admin/cooks/:id/assign
+const assignUserToCook = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ message: 'User ID is required' });
+
+    const cook = await Cook.findByIdAndUpdate(req.params.id, { userId }, { new: true });
+    if (!cook) return res.status(404).json({ message: 'Cook not found' });
+
+    res.json({ message: 'Cook assigned to user successfully', cook });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createCook,
   getApprovedCooks,
@@ -202,5 +217,6 @@ module.exports = {
   updateCookStatus,
   updateCookDetails,
   updateOwnProfile,
-  deleteCook
+  deleteCook,
+  assignUserToCook
 };

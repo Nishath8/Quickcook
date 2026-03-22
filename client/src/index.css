@@ -563,10 +563,10 @@ footer.custom-footer {
 
 /* ── STAGGER ANIMATIONS ── */
 .fade-in {
-  opacity: 0; transform: translateY(18px);
+  transform: translateY(18px);
   transition: opacity 0.55s ease, transform 0.55s ease;
 }
-.fade-in.visible { opacity: 1; transform: translateY(0); }
+.fade-in.is-visible { opacity: 1; transform: translateY(0); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 800px) {

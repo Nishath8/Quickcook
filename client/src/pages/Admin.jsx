@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Admin() {
+  const { user } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem('adminAuth') === 'true';
   });
@@ -9,6 +11,23 @@ export default function Admin() {
   const [cooks, setCooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const assignToMe = async (id) => {
+    if (!user) return alert("Please sign in with Google first!");
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/cooks/${id}/assign`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id }),
+      });
+      if (!response.ok) throw new Error('Failed to assign cook');
+      
+      setCooks((prev) => prev.map(c => c._id === id ? { ...c, userId: user.id } : c));
+      alert("Cook linked to your account! You can now use the Dashboard.");
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
   // Edit Feature State
   const [editingId, setEditingId] = useState(null);
@@ -316,12 +335,20 @@ export default function Admin() {
                               Edit
                             </button>
                             <button
-                              onClick={() => deleteCookFn(cook._id)}
-                              className="flex-1 sm:flex-none text-center text-gray-600 hover:text-white hover:bg-gray-800 font-medium bg-gray-100 px-3 py-2 sm:py-1 rounded-md transition-colors"
-                            >
-                              Delete
-                            </button>
-                          </>
+                               onClick={() => deleteCookFn(cook._id)}
+                               className="flex-1 sm:flex-none text-center text-gray-600 hover:text-white hover:bg-gray-800 font-medium bg-gray-100 px-3 py-2 sm:py-1 rounded-md transition-colors"
+                             >
+                               Delete
+                             </button>
+                             {!cook.userId && (
+                               <button
+                                 onClick={() => assignToMe(cook._id)}
+                                 className="flex-1 sm:flex-none text-center text-amber-600 hover:text-white hover:bg-amber-600 font-medium bg-amber-50 px-3 py-2 sm:py-1 rounded-md transition-colors border border-amber-100"
+                               >
+                                 Link to My Account
+                               </button>
+                             )}
+                           </>
                         )}
                       </div>
                     </td>

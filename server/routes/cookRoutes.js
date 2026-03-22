@@ -12,7 +12,8 @@ const {
   updateCookStatus,
   updateCookDetails,
   updateOwnProfile,
-  deleteCook
+  deleteCook,
+  assignUserToCook
 } = require('../controllers/cookController');
 
 // Multer config for local uploads
@@ -45,5 +46,6 @@ router.get('/admin/cooks', getAllCooksForAdmin);
 router.patch('/admin/cooks/:id', updateCookStatus);
 router.put('/admin/cooks/:id', updateCookDetails);
 router.delete('/admin/cooks/:id', deleteCook);
+router.post('/admin/cooks/:id/assign', assignUserToCook);
 
 module.exports = router;

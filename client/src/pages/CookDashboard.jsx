@@ -33,7 +33,8 @@ export default function CookDashboard() {
       // Actually, since `/admin/cooks` returns all Cooks but requires no admin token on GET right now?
       // Wait, `/cooks` returns approved cooks. We should fetch all cooks.
       const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin/cooks`);
-      const myCook = res.data.find(c => c.userId === user.id);
+      // Find cook profile matching this user. Ensure we compare as strings.
+      const myCook = res.data.find(c => c.userId?.toString() === user.id?.toString());
       
       if (myCook) {
         setProfile(myCook);
@@ -109,7 +110,7 @@ export default function CookDashboard() {
 
   if (!profile) {
     return (
-      <div className="max-w-xl mx-auto py-20 text-center animate-in fade-in duration-500">
+      <div className="max-w-xl mx-auto py-20 text-center animate-fade-in-up">
         <ChefHat className="w-16 h-16 mx-auto text-gray-300 mb-4" />
         <h2 className="text-2xl font-bold text-gray-900 mb-2">No Cook Profile Found</h2>
         <p className="text-gray-500 mb-6">You don't have an active cook profile linked to this Google account.</p>
