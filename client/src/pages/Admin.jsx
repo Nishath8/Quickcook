@@ -114,27 +114,41 @@ export default function Admin() {
 
   if (!isLoggedIn) {
     return (
-      <div className="max-w-md mx-auto mt-20 bg-white p-8 border border-gray-100 shadow-sm rounded-lg">
-        <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">Admin Login</h2>
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 p-2 border"
-              placeholder="Enter admin password"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 transition-colors"
-          >
-            Login
-          </button>
-        </form>
+      <div className="max-w-md mx-auto py-20 px-4">
+        <div style={{ backgroundColor: 'var(--cream)', borderRadius: '24px', padding: '40px', border: '1px solid #E5E0D8' }}>
+          <h2 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--ink)', textAlign: 'center', marginBottom: '8px' }}>Admin Dashboard</h2>
+          <p className="text-center text-sm mb-6" style={{color: 'var(--ink4)'}}>Restricted access. Please log in.</p>
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div>
+              <label style={{ color: 'var(--ink3)', fontSize: '13px', fontWeight: 500, marginBottom: '6px', display: 'block' }}>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-1 focus:ring-[var(--ink)] focus:border-[var(--ink)] outline-none transition-all placeholder-gray-400 text-gray-900 bg-white"
+                placeholder="Enter admin password"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="mt-2"
+              style={{
+                backgroundColor: 'var(--ink)',
+                color: 'white',
+                width: '100%',
+                padding: '14px',
+                borderRadius: '12px',
+                fontWeight: 'bold',
+                transition: 'background-color 0.2s',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#000'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--ink)'}
+            >
+              Authenticate
+            </button>
+          </form>
+        </div>
       </div>
     );
   }
@@ -143,15 +157,15 @@ export default function Admin() {
   if (error) return <div className="text-red-500 text-center py-8">{error}</div>;
 
   return (
-    <div className="max-w-6xl mx-auto py-6 px-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+    <div className="max-w-6xl mx-auto py-12 px-4">
+      <div className="flex justify-between items-center mb-8">
+        <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: 'var(--ink)' }}>Admin Table</h1>
         <button
           onClick={() => {
             localStorage.removeItem('adminAuth');
             setIsLoggedIn(false);
           }}
-          className="text-sm px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-md transition-colors"
+          className="text-sm px-5 py-2 hover:bg-gray-100 text-gray-700 font-medium rounded-lg transition-colors border border-gray-200"
         >
           Logout
         </button>

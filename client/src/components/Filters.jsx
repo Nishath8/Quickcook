@@ -7,39 +7,28 @@ export default function Filters({ filters, onFilterChange }) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-8">
-      <div className="flex flex-col md:flex-row gap-4">
-        
-        {/* Location Filter */}
-        <div className="flex-1 relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <MapPin className="h-5 w-5 text-gray-400" />
-          </div>
+    <div className="search-section mx-[-1rem] sm:mx-[calc(-50vw+50%)] relative w-[100vw] mb-8">
+      <div className="search-inner">
+        <div className="search-field">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M7 1C4.79 1 3 2.79 3 5c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4z" stroke="currentColor" strokeWidth="1.2"/><circle cx="7" cy="5" r="1.2" stroke="currentColor" strokeWidth="1.2"/></svg>
           <input
             type="text"
             name="location"
             value={filters.location}
             onChange={handleChange}
-            className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-            placeholder="Filter by location..."
+            placeholder="Filter by area — Indiranagar, Koramangala…"
           />
         </div>
-
-        {/* Cuisine Filter */}
-        <div className="flex-1 relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Utensils className="h-5 w-5 text-gray-400" />
-          </div>
+        <div className="search-field">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>
           <input
             type="text"
             name="cuisine"
             value={filters.cuisine}
             onChange={handleChange}
-            className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-            placeholder="Filter by cuisine..."
+            placeholder="Cuisine — South Indian, Bengali, Jain…"
           />
         </div>
-
       </div>
     </div>
   );

@@ -67,7 +67,15 @@ const createCook = async (req, res) => {
     }
 
     // Pass all tests -> creation
-    const cook = new Cook({ name, location, cuisine, price_range, contact, status: 'pending' });
+    const cook = new Cook({ 
+      name, 
+      location, 
+      cuisine, 
+      price_range, 
+      contact, 
+      status: 'pending',
+      userId: req.user?.userId || null 
+    });
     await cook.save();
 
     // Memory leak prevention block
@@ -89,6 +97,17 @@ const getApprovedCooks = async (req, res) => {
     
     const cooks = await Cook.find(filter);
     res.json(cooks);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// GET /cooks/:id
+const getCookById = async (req, res) => {
+  try {
+    const cook = await Cook.findById(req.params.id);
+    if (!cook) return res.status(404).json({ message: 'Cook not found' });
+    res.json(cook);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -138,6 +157,32 @@ const updateCookDetails = async (req, res) => {
   }
 };
 
+// PUT /cooks/profile/:id
+const updateOwnProfile = async (req, res) => {
+  try {
+    const cook = await Cook.findById(req.params.id);
+    if (!cook) return res.status(404).json({ message: 'Cook not found' });
+    
+    if (cook.userId?.toString() !== req.user.userId && !req.user.isAdmin) {
+      return res.status(403).json({ message: 'You are not authorized to edit this profile' });
+    }
+
+    const { name, location, cuisine, price_range, contact, images } = req.body;
+    let upData = {};
+    if (name) upData.name = name;
+    if (location) upData.location = location;
+    if (cuisine) upData.cuisine = cuisine;
+    if (price_range) upData.price_range = price_range;
+    if (contact) upData.contact = contact;
+    if (images) upData.images = images; // Overwrite images array
+
+    const updatedCook = await Cook.findByIdAndUpdate(req.params.id, upData, { new: true });
+    res.json({ message: 'Profile updated successfully', cook: updatedCook });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // DELETE /admin/cooks/:id
 const deleteCook = async (req, res) => {
   try {
@@ -152,8 +197,10 @@ const deleteCook = async (req, res) => {
 module.exports = {
   createCook,
   getApprovedCooks,
+  getCookById,
   getAllCooksForAdmin,
   updateCookStatus,
   updateCookDetails,
+  updateOwnProfile,
   deleteCook
 };

@@ -16,9 +16,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  const login = async (credential) => {
+  const login = async (payload) => {
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/google`, { credential });
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/google`, payload);
       setToken(res.data.token);
       setUser(res.data.user);
       localStorage.setItem('token', res.data.token);

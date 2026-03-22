@@ -16,77 +16,67 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
-      <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            {/* Logo */}
-            <div className="flex-shrink-0 flex items-center">
-              <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity cursor-pointer">
-                <div className="bg-primary-600 p-2 rounded-lg text-white">
-                  <ChefHat className="w-6 h-6" />
-                </div>
-                <span className="font-bold text-xl text-gray-900 tracking-tight hidden sm:block">Quickcook</span>
-              </Link>
-            </div>
-
-            {/* Nav Links */}
-            <div className="flex space-x-2 sm:space-x-6 items-center">
-              {navLinks.map((link) => {
-                const isActive = location.pathname === link.path;
-                return (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    className={`flex items-center text-sm font-medium transition-colors duration-200 ${
-                      isActive
-                        ? 'text-primary-600'
-                        : 'text-gray-500 hover:text-gray-900'
-                    }`}
-                  >
-                    {link.icon}
-                    <span className="hidden sm:inline">{link.name}</span>
-                  </Link>
-                );
-              })}
-              
-              {/* Auth Actions */}
-              <div className="ml-2 sm:ml-4 border-l border-gray-200 pl-2 sm:pl-6 h-full flex items-center">
-                {user ? (
-                  <div className="flex items-center space-x-3">
-                    <img 
-                      src={user.avatar} 
-                      alt="Avatar" 
-                      className="w-8 h-8 rounded-full border border-gray-200 shadow-sm"
-                      referrerPolicy="no-referrer"
-                    />
-                    <button 
-                      onClick={logout}
-                      className="text-gray-400 hover:text-red-500 transition-colors"
-                      title="Log out"
-                    >
-                      <LogOut className="w-5 h-5" />
-                    </button>
-                  </div>
-                ) : (
-                  <GoogleLogin
-                    onSuccess={(credentialResponse) => {
-                      login(credentialResponse.credential).catch(err => alert(err.message));
-                    }}
-                    onError={() => console.log('Login Failed')}
-                    shape="pill"
-                    size="medium"
-                  />
-                )}
+      <nav className="custom-nav">
+        <Link className="nav-logo" to="/">
+          <div className="nav-logo-mark">
+            <svg viewBox="0 0 18 18" fill="none"><path d="M9 2C6.24 2 4 4.24 4 7c0 2 1.2 3.73 2.93 4.55L6 15h6l-.93-3.45A5 5 0 0 0 14 7c0-2.76-2.24-5-5-5z" stroke="white" strokeWidth="1.3" strokeLinejoin="round"/><path d="M7 15h4" stroke="white" strokeWidth="1.3" strokeLinecap="round"/></svg>
+          </div>
+          Quickcook
+        </Link>
+        <div className="nav-right">
+          <Link className="nav-link hidden sm:inline" to="/">Find a cook</Link>
+          <Link className="nav-link" to="/add">Add Cook</Link>
+          {user && <Link className="nav-link" to="/dashboard">Dashboard</Link>}
+          <Link className="nav-link" to="/admin">Admin</Link>
+          
+          <div className="flex items-center h-full ml-2">
+            {user ? (
+              <div className="flex items-center space-x-3 border-l border-gray-200 pl-4 h-full">
+                <img 
+                  src={user.avatar} 
+                  alt="Avatar" 
+                  className="w-8 h-8 rounded-full border border-gray-200 shadow-sm"
+                  referrerPolicy="no-referrer"
+                />
+                <button 
+                  onClick={logout}
+                  className="text-gray-400 hover:text-red-500 transition-colors"
+                  title="Log out"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
               </div>
-            </div>
+            ) : (
+              <div className="border-l border-gray-200 pl-4 h-full flex items-center">
+                <GoogleLogin
+                  onSuccess={(credentialResponse) => {
+                    login({ credential: credentialResponse.credential }).catch(err => alert(err.message));
+                  }}
+                  onError={() => console.log('Login Failed')}
+                  shape="rectangular"
+                  size="small"
+                  type="standard"
+                  theme="outline"
+                  text="signin"
+                />
+              </div>
+            )}
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 w-full max-w-7xl mx-auto py-8">
         <Outlet />
       </main>
+
+      {/* Footer */}
+      <footer className="custom-footer mt-auto">
+        <div className="footer-inner">
+          <span className="footer-logo">Quickcook</span>
+          <span className="footer-copy">© 2025 Quickcook · Bengaluru, India · Every cook is verified.</span>
+        </div>
+      </footer>
     </div>
   );
 }

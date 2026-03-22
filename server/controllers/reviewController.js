@@ -32,13 +32,15 @@ const addReview = async (req, res) => {
     const review = new Review({ cookId, userId, rating, comment });
     await review.save();
 
-    // Dynamically calculate and update the Cook's new average rating
+    // Dynamically calculate and update the Cook's new average rating and vouches
     const allReviews = await Review.find({ cookId });
     const avgRating = allReviews.reduce((acc, item) => item.rating + acc, 0) / allReviews.length;
+    const vouchCount = allReviews.filter(item => item.rating >= 4).length;
     
     await Cook.findByIdAndUpdate(cookId, {
       averageRating: parseFloat(avgRating.toFixed(1)),
-      reviewCount: allReviews.length
+      reviewCount: allReviews.length,
+      vouchCount
     });
 
     // Populate user info before returning to frontend so it can display immediately
@@ -59,15 +61,17 @@ const deleteReview = async (req, res) => {
     const cookId = review.cookId;
     await Review.findByIdAndDelete(req.params.id);
 
-    // Recalculate Cook rating
+    // Recalculate Cook rating and vouches
     const allReviews = await Review.find({ cookId });
     const avgRating = allReviews.length > 0 
       ? allReviews.reduce((acc, item) => item.rating + acc, 0) / allReviews.length 
       : 0;
+    const vouchCount = allReviews.filter(item => item.rating >= 4).length;
     
     await Cook.findByIdAndUpdate(cookId, {
       averageRating: parseFloat(avgRating.toFixed(1)),
-      reviewCount: allReviews.length
+      reviewCount: allReviews.length,
+      vouchCount
     });
 
     res.json({ message: 'Review deleted successfully' });

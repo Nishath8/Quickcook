@@ -6,6 +6,8 @@ const cookRoutes = require('./routes/cookRoutes');
 const authRoutes = require('./routes/authRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 
+const path = require('path');
+
 const app = express();
 
 app.use(cors({
@@ -13,6 +15,7 @@ app.use(cors({
   credentials: true 
 }));
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/', cookRoutes);
 app.use('/auth', authRoutes);

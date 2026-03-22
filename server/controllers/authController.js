@@ -9,14 +9,31 @@ const googleLogin = async (req, res) => {
   try {
     const { credential } = req.body;
     
-    // Verify the Google JWT token
-    const ticket = await client.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    
-    const payload = ticket.getPayload();
-    const { sub: googleId, email, name, picture: avatar } = payload;
+// Verify the Google JWT token or Access Token
+    let googleId, email, name, avatar;
+
+    if (req.body.credential) {
+      const ticket = await client.verifyIdToken({
+        idToken: req.body.credential,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      googleId = payload.sub;
+      email = payload.email;
+      name = payload.name;
+      avatar = payload.picture;
+    } else if (req.body.access_token) {
+      const axios = require('axios');
+      const resp = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${req.body.access_token}` }
+      });
+      googleId = resp.data.sub;
+      email = resp.data.email;
+      name = resp.data.name;
+      avatar = resp.data.picture;
+    } else {
+      return res.status(400).json({ message: 'No Google token provided.' });
+    }
 
     // Find or create the user
     let user = await User.findOne({ googleId });

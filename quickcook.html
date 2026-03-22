@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quickcook — Home cooks, vouched for.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F7F4EE;
+    --ink: #1A1917;
+    --ink2: #3D3C39;
+    --ink3: #6E6C67;
+    --ink4: #A8A69F;
+    --green: #1A6B4A;
+    --green-light: #E4F2EA;
+    --green-mid: #2D8C60;
+    --amber: #C17B2A;
+    --amber-light: #FBF0DF;
+    --border: rgba(26,25,23,0.1);
+    --border2: rgba(26,25,23,0.06);
+    --card: #FFFFFF;
+    --serif: 'Lora', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --r: 14px;
+    --r-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(247,244,238,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--serif);
+    font-size: 20px; font-weight: 500;
+    color: var(--ink); text-decoration: none;
+  }
+
+  .nav-logo-mark {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--green);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .nav-logo-mark svg { width: 18px; height: 18px; }
+
+  .nav-right { display: flex; align-items: center; gap: 8px; }
+
+  .nav-link {
+    font-size: 14px; color: var(--ink3); text-decoration: none;
+    padding: 6px 12px; border-radius: var(--r-sm);
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav-link:hover { background: var(--border2); color: var(--ink); }
+
+  .btn-nav {
+    font-size: 14px; font-weight: 500;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: var(--r-sm);
+    padding: 8px 16px; cursor: pointer;
+    transition: opacity 0.15s;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .btn-nav:hover { opacity: 0.85; }
+
+  .google-g {
+    width: 16px; height: 16px;
+    background: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .google-g svg { width: 10px; height: 10px; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: clamp(4rem, 10vw, 7rem) clamp(1.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 420px; gap: 4rem; align-items: center;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-light); color: var(--green);
+    font-size: 12px; font-weight: 500; letter-spacing: 0.04em;
+    padding: 5px 12px; border-radius: 20px;
+    margin-bottom: 1.25rem;
+  }
+  .eyebrow-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green-mid);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero-h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 400; line-height: 1.15;
+    color: var(--ink); margin-bottom: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+  .hero-h1 em {
+    font-style: italic; color: var(--green);
+  }
+
+  .hero-sub {
+    font-size: 17px; color: var(--ink2);
+    line-height: 1.7; margin-bottom: 2rem;
+    max-width: 480px; font-weight: 300;
+  }
+
+  .hero-cta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--green); color: white;
+    border: none; border-radius: var(--r-sm);
+    padding: 13px 24px; font-size: 15px; font-weight: 500;
+    cursor: pointer; transition: background 0.15s;
+    font-family: var(--sans);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--green-mid); }
+
+  .btn-ghost {
+    background: transparent; color: var(--ink2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 12px 20px; font-size: 15px;
+    cursor: pointer; transition: border-color 0.15s, color 0.15s;
+    font-family: var(--sans);
+  }
+  .btn-ghost:hover { border-color: var(--ink3); color: var(--ink); }
+
+  .hero-trust {
+    display: flex; align-items: center; gap: 16px;
+    margin-top: 2rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .trust-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 13px; color: var(--ink3);
+  }
+  .trust-item svg { width: 15px; height: 15px; color: var(--green); }
+
+  /* Hero right — floating card preview */
+  .hero-card-preview {
+    position: relative;
+  }
+
+  .preview-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    animation: floatup 0.7s ease both;
+  }
+  @keyframes floatup {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .preview-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--green-light); color: var(--green);
+    font-size: 11px; font-weight: 500;
+    padding: 3px 9px; border-radius: 20px; margin-bottom: 14px;
+  }
+
+  .preview-header { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+
+  .av-circle {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-size: 18px; font-weight: 500;
+    flex-shrink: 0;
+  }
+  .av-teal { background: var(--green-light); color: var(--green); }
+  .av-coral { background: #FAECE7; color: #7B3322; }
+  .av-blue { background: #E6F1FB; color: #0C447C; }
+
+  .preview-name { font-size: 16px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+  .preview-cuisine { font-size: 13px; color: var(--ink3); margin-bottom: 5px; }
+
+  .v-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--green-light); color: var(--green);
+    font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 20px;
+  }
+
+  .vouches-strip {
+    background: var(--green-light);
+    border-radius: var(--r-sm);
+    padding: 9px 12px;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .vouch-avs { display: flex; }
+  .vav {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--green-mid); color: white;
+    border: 2px solid var(--green-light);
+    margin-right: -7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 500;
+  }
+  .vouches-text { font-size: 12px; color: var(--green); font-weight: 500; margin-left: 12px; }
+
+  .preview-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 14px; }
+  .pm { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink3); }
+  .pm svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+  .stars-row { display: flex; align-items: center; gap: 5px; margin-bottom: 14px; }
+  .stars { font-size: 13px; letter-spacing: 1px; }
+
+  .locked-block {
+    background: #F7F4EE;
+    border-radius: var(--r-sm);
+    padding: 12px;
+    border: 1px solid var(--border2);
+  }
+  .locked-fields {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    margin-bottom: 10px;
+  }
+  .lf-label { font-size: 11px; color: var(--ink4); margin-bottom: 3px; }
+  .lf-blur {
+    font-size: 13px; color: var(--ink2);
+    filter: blur(5px); user-select: none; letter-spacing: 0.5px;
+  }
+  .btn-signin {
+    width: 100%;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: var(--r-sm);
+    padding: 9px; font-size: 13px; font-weight: 500;
+    cursor: pointer; font-family: var(--sans);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: opacity 0.15s;
+  }
+  .btn-signin:hover { opacity: 0.85; }
+  .g-icon {
+    width: 16px; height: 16px; background: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .preview-card-footer {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px;
+  }
+  .btn-card-p {
+    background: var(--ink); color: white;
+    border: none; border-radius: var(--r-sm);
+    padding: 9px; font-size: 13px; font-weight: 500; cursor: pointer;
+    text-align: center; font-family: var(--sans);
+  }
+  .btn-card-s {
+    background: transparent; color: var(--ink2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 9px; font-size: 13px; cursor: pointer;
+    text-align: center; font-family: var(--sans);
+  }
+
+  /* floating badge */
+  .float-badge {
+    position: absolute;
+    top: -14px; right: -14px;
+    background: white; border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 14px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 500; color: var(--ink2);
+    animation: floatup 0.9s 0.2s ease both;
+  }
+  .float-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+  /* ── SEARCH BAR ── */
+  .search-section {
+    background: white;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem clamp(1.5rem, 5vw, 4rem);
+  }
+  .search-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  }
+  .search-field {
+    flex: 1; min-width: 180px;
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 0 14px; height: 44px;
+    background: var(--cream);
+    transition: border-color 0.15s;
+  }
+  .search-field:focus-within { border-color: var(--green); }
+  .search-field svg { width: 16px; height: 16px; color: var(--ink4); flex-shrink: 0; }
+  .search-field input {
+    border: none; background: transparent;
+    font-size: 14px; font-family: var(--sans); color: var(--ink);
+    outline: none; width: 100%;
+  }
+  .search-field input::placeholder { color: var(--ink4); }
+  .search-btn {
+    background: var(--green); color: white;
+    border: none; border-radius: var(--r-sm);
+    height: 44px; padding: 0 20px;
+    font-size: 14px; font-weight: 500; font-family: var(--sans);
+    cursor: pointer; white-space: nowrap;
+    transition: background 0.15s;
+  }
+  .search-btn:hover { background: var(--green-mid); }
+
+  /* ── SECTION WRAPPER ── */
+  .section {
+    max-width: 1100px; margin: 0 auto;
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+  }
+
+  .section-header { margin-bottom: 2rem; }
+  .section-eyebrow {
+    font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
+    color: var(--green); text-transform: uppercase; margin-bottom: 6px;
+  }
+  .section-h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 400; color: var(--ink); line-height: 1.25;
+  }
+  .section-sub { font-size: 15px; color: var(--ink3); margin-top: 8px; font-weight: 300; }
+
+  /* ── COOK CARDS GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+  }
+
+  .cook-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px; overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .cook-card:hover { transform: translateY(-3px); border-color: rgba(26,25,23,0.18); }
+
+  .card-body { padding: 18px 18px 14px; }
+
+  .card-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+  .card-name-text { font-size: 17px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+  .card-cuisine-text { font-size: 13px; color: var(--ink3); margin-bottom: 5px; }
+
+  .vouch-strip {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--green-light);
+    border-radius: var(--r-sm); padding: 8px 11px;
+    margin-bottom: 12px;
+  }
+  .vouch-strip .vouches-text { font-size: 12px; color: var(--green); font-weight: 500; margin-left: 10px; }
+
+  .card-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 12px; }
+  .cm { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink3); }
+  .cm svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+  .card-stars { display: flex; align-items: center; gap: 5px; margin-bottom: 12px; }
+
+  .card-locked {
+    background: var(--cream); border-radius: var(--r-sm);
+    padding: 10px 12px; border: 1px solid var(--border2);
+  }
+  .card-locked-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 9px; }
+  .clf-label { font-size: 11px; color: var(--ink4); margin-bottom: 2px; }
+  .clf-blur { font-size: 13px; color: var(--ink2); filter: blur(4.5px); user-select: none; letter-spacing: 0.5px; }
+  .btn-lock-signin {
+    width: 100%; background: var(--ink); color: var(--cream);
+    border: none; border-radius: 6px; padding: 8px;
+    font-size: 12px; font-weight: 500; font-family: var(--sans);
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;
+    transition: opacity 0.15s;
+  }
+  .btn-lock-signin:hover { opacity: 0.82; }
+
+  .card-foot {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    border-top: 1px solid var(--border2); padding: 12px 18px;
+  }
+  .cfp {
+    background: var(--ink); color: white; border: none;
+    border-radius: 8px; padding: 9px; font-size: 13px; font-weight: 500;
+    cursor: pointer; font-family: var(--sans); text-align: center;
+    transition: opacity 0.15s;
+  }
+  .cfp:hover { opacity: 0.85; }
+  .cfs {
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 8px; padding: 9px; font-size: 13px; color: var(--ink2);
+    cursor: pointer; font-family: var(--sans); text-align: center;
+    transition: border-color 0.15s;
+  }
+  .cfs:hover { border-color: var(--ink3); }
+
+  /* ── HOW IT WORKS ── */
+  .how-section { background: white; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; }
+  .step { position: relative; }
+  .step-num {
+    font-family: var(--serif); font-size: 3rem; font-weight: 400;
+    color: var(--green-light); line-height: 1; margin-bottom: 12px;
+  }
+  .step-title { font-size: 16px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+  .step-body { font-size: 14px; color: var(--ink3); line-height: 1.6; font-weight: 300; }
+  .step-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--green-light);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px;
+  }
+  .step-icon svg { width: 20px; height: 20px; color: var(--green); }
+
+  /* ── TRUST SECTION ── */
+  .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+  .trust-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 24px 20px;
+  }
+  .trust-icon-wrap {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px;
+  }
+  .trust-icon-wrap svg { width: 22px; height: 22px; }
+  .trust-title { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+  .trust-body { font-size: 13px; color: var(--ink3); line-height: 1.6; font-weight: 300; }
+
+  /* ── TESTIMONIALS ── */
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .testi-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 22px 20px;
+  }
+  .testi-stars { font-size: 13px; color: var(--amber); margin-bottom: 12px; }
+  .testi-quote {
+    font-family: var(--serif); font-style: italic;
+    font-size: 15px; color: var(--ink2); line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .testi-author { display: flex; align-items: center; gap: 10px; }
+  .testi-av {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 500;
+  }
+  .testi-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .testi-location { font-size: 12px; color: var(--ink4); }
+
+  /* ── CTA BAND ── */
+  .cta-band {
+    background: var(--ink); color: white;
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+    text-align: center;
+  }
+  .cta-h2 {
+    font-family: var(--serif); font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 400; margin-bottom: 12px; line-height: 1.2;
+  }
+  .cta-h2 em { font-style: italic; color: #9FE1CB; }
+  .cta-sub { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 2rem; font-weight: 300; }
+  .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-cta-p {
+    background: var(--green); color: white; border: none;
+    border-radius: var(--r-sm); padding: 13px 28px;
+    font-size: 15px; font-weight: 500; font-family: var(--sans);
+    cursor: pointer; transition: background 0.15s;
+  }
+  .btn-cta-p:hover { background: var(--green-mid); }
+  .btn-cta-s {
+    background: transparent; color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--r-sm); padding: 12px 24px;
+    font-size: 15px; font-family: var(--sans); cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-cta-s:hover { color: white; border-color: rgba(255,255,255,0.4); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--cream);
+    border-top: 1px solid var(--border);
+    padding: 2rem clamp(1.5rem, 5vw, 4rem);
+  }
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .footer-logo { font-family: var(--serif); font-size: 16px; color: var(--ink2); }
+  .footer-copy { font-size: 13px; color: var(--ink4); }
+
+  /* ── STAGGER ANIMATIONS ── */
+  .fade-in {
+    opacity: 0; transform: translateY(18px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 800px) {
+    .hero { grid-template-columns: 1fr; gap: 2.5rem; }
+    .hero-card-preview { display: none; }
+    .float-badge { display: none; }
+  }
+  @media (max-width: 520px) {
+    .hero-trust { flex-wrap: wrap; gap: 10px; }
+    .search-inner { flex-direction: column; }
+    .search-field { width: 100%; }
+    .search-btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M9 2C6.24 2 4 4.24 4 7c0 2 1.2 3.73 2.93 4.55L6 15h6l-.93-3.45A5 5 0 0 0 14 7c0-2.76-2.24-5-5-5z" stroke="white" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 15h4" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </div>
+    Quickcook
+  </a>
+  <div class="nav-right">
+    <a class="nav-link" href="#cooks">Find a cook</a>
+    <a class="nav-link" href="#how">How it works</a>
+    <button class="btn-nav">
+      <div class="google-g">
+        <svg viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+      </div>
+      Sign in
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">
+      <div class="eyebrow-dot"></div>
+      Bengaluru's trust-first cook marketplace
+    </div>
+    <h1 class="hero-h1">
+      Home cooks,<br>
+      <em>vouched for</em><br>
+      by your neighbours.
+    </h1>
+    <p class="hero-sub">
+      Every cook on Quickcook is verified by real past clients and background-checked — so you get a trusted home cook, not a stranger from the internet.
+    </p>
+    <div class="hero-cta">
+      <button class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="white" stroke-width="1.5"/><path d="M11 11l3 3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Find a cook near you
+      </button>
+      <button class="btn-ghost">List your services</button>
+    </div>
+    <div class="hero-trust">
+      <div class="trust-item">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.5 4H14l-3.5 2.5 1.5 4L8 9 4 11.5l1.5-4L2 5h4.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+        Background checked
+      </div>
+      <div class="trust-item">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M13 4L6 11 3 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Client-vouched
+      </div>
+      <div class="trust-item">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 5v3.5l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Recurring bookings
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero card preview -->
+  <div class="hero-card-preview">
+    <div class="float-badge">
+      <div class="float-badge-dot"></div>
+      24 cooks in Indiranagar
+    </div>
+    <div class="preview-card">
+      <div class="preview-tag">
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1A6B4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Verified cook
+      </div>
+      <div class="preview-header">
+        <div class="av-circle av-teal">M</div>
+        <div>
+          <div class="preview-name">Meera Krishnan</div>
+          <div class="preview-cuisine">South Indian · Kerala · Chettinad</div>
+          <div class="v-badge">
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1A6B4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Background checked
+          </div>
+        </div>
+      </div>
+      <div class="vouches-strip">
+        <div class="vouch-avs">
+          <div class="vav">R</div><div class="vav">S</div><div class="vav">A</div><div class="vav">P</div>
+        </div>
+        <span class="vouches-text">Vouched by 4 past clients</span>
+      </div>
+      <div class="preview-meta">
+        <div class="pm"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1C4.79 1 3 2.79 3 5c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4z" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="5" r="1.2" stroke="currentColor" stroke-width="1.2"/></svg>Koramangala</div>
+        <div class="pm"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3.5l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Daily, 7–10am</div>
+        <div class="pm"><svg viewBox="0 0 14 14" fill="none"><path d="M2 10c0-2.5 2-4 5-4s5 1.5 5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4" r="2" stroke="currentColor" stroke-width="1.2"/></svg>Veg only</div>
+        <div class="pm"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11V7M7 11V3M11 11V5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>12 bookings/mo</div>
+      </div>
+      <div class="stars-row">
+        <span class="stars" style="color:#C17B2A;">★★★★★</span>
+        <span style="font-size:13px;font-weight:500;color:var(--ink);">4.9</span>
+        <span style="font-size:12px;color:var(--ink4);">· 18 reviews</span>
+      </div>
+      <div class="locked-block">
+        <div class="locked-fields">
+          <div><div class="lf-label">Price / meal</div><div class="lf-blur">₹380–480</div></div>
+          <div><div class="lf-label">Contact</div><div class="lf-blur">+91 98765</div></div>
+        </div>
+        <button class="btn-signin">
+          <div class="g-icon">
+            <svg width="10" height="10" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+          </div>
+          Sign in with Google to view
+        </button>
+      </div>
+      <div class="preview-card-footer">
+        <button class="btn-card-p">View profile</button>
+        <button class="btn-card-s">Reviews (18)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-section">
+  <div class="search-inner">
+    <div class="search-field">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M7 1C4.79 1 3 2.79 3 5c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4z" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="5" r="1.2" stroke="currentColor" stroke-width="1.2"/></svg>
+      <input type="text" placeholder="Filter by area — Indiranagar, Koramangala…">
+    </div>
+    <div class="search-field">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <input type="text" placeholder="Cuisine — South Indian, Bengali, Jain…">
+    </div>
+    <button class="search-btn">Find cooks</button>
+  </div>
+</div>
+
+<!-- COOK CARDS -->
+<div id="cooks" class="section">
+  <div class="section-header fade-in">
+    <div class="section-eyebrow">Available now</div>
+    <h2 class="section-h2">Cooks near you</h2>
+    <p class="section-sub">All verified, all vouched. Sign in to see contact details and pricing.</p>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- Card 1 -->
+    <div class="cook-card fade-in">
+      <div class="card-body">
+        <div class="card-head">
+          <div class="av-circle av-teal">M</div>
+          <div>
+            <div class="card-name-text">Meera Krishnan</div>
+            <div class="card-cuisine-text">South Indian · Kerala · Chettinad</div>
+            <div class="v-badge" style="margin-top:4px;">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1A6B4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Verified cook
+            </div>
+          </div>
+        </div>
+        <div class="vouch-strip">
+          <div class="vouch-avs"><div class="vav">R</div><div class="vav">S</div><div class="vav">A</div><div class="vav">P</div></div>
+          <span class="vouches-text">Vouched by 4 past clients</span>
+        </div>
+        <div class="card-meta-grid">
+          <div class="cm"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1C4.79 1 3 2.79 3 5c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4z" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="5" r="1.2" stroke="currentColor" stroke-width="1.2"/></svg>Koramangala</div>
+          <div class="cm"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3.5l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Daily 7–10am</div>
+          <div class="cm"><svg viewBox="0 0 14 14" fill="none"><path d="M2 10c0-2.5 2-4 5-4s5 1.5 5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4" r="2" stroke="currentColor" stroke-width="1.2"/></svg>Veg only</div>
+          <div class="cm"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11V7M7 11V3M11 11V5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>12 bookings/mo</div>
+        </div>
+        <div class="card-stars">
+          <span style="font-size:13px;color:#C17B2A;letter-spacing:1px;">★★★★★</span>
+          <span style="font-size:13px;font-weight:500;color:var(--ink);">4.9</span>
+          <span style="font-size:12px;color:var(--ink4);">· 18 reviews</span>
+        </div>
+        <div class="card-locked">
+          <div class="card-locked-fields">
+            <div><div class="clf-label">Price / meal</div><div class="clf-blur">₹380–480</div></div>
+            <div><div class="clf-label">Contact</div><div class="clf-blur">+91 98765</div></div>
+          </div>
+          <button class="btn-lock-signin">
+            <div class="g-icon"><svg width="10" height="10" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg></div>
+            Sign in with Google to view
+          </button>
+        </div>
+      </div>
+      <div class="card-foot">
+        <button class="cfp">View profile</button>
+        <button class="cfs">Reviews (18)</button>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="cook-card fade-in" style="transition-delay:0.1s">
+      <div class="card-body">
+        <div class="card-head">
+          <div class="av-circle av-coral">R</div>
+          <div>
+            <div class="card-name-text">Razia Begum</div>
+            <div class="card-cuisine-text">Bengali · Mughlai · North Indian</div>
+            <div class="v-badge" style="margin-top:4px;">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1A6B4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Verified cook
+            </div>
+          </div>
+        </div>
+        <div class="vouch-strip">
+          <div class="vouch-avs"><div class="vav">K</div><div class="vav">N</div><div class="vav">T</div></div>
+          <span class="vouches-text">Vouched by 3 past clients</span>
+        </div>
+        <div class="card-meta-grid">
+          <div class="cm"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1C4.79 1 3 2.79 3 5c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4z" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="5" r="1.2" stroke="currentColor" stroke-width="1.2"/></svg>Indiranagar</div>
+          <div class="cm"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3.5l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Mon–Sat 7–9am</div>
+          <div class="cm"><svg viewBox="0 0 14 14" fill="none"><path d="M2 10c0-2.5 2-4 5-4s5 1.5 5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4" r="2" stroke="currentColor" stroke-width="1.2"/></svg>Veg &amp; non-veg</div>
+          <div class="cm"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11V7M7 11V3M11 11V5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>8 bookings/mo</div>
+        </div>
+        <div class="card-stars">
+          <span style="font-size:13px;color:#C17B2A;letter-spacing:1px;">★★★★★</span>
+          <span style="font-size:13px;font-weight:500;color:var(--ink);">4.7</span>
+          <span style="font-size:12px;color:var(--ink4);">· 11 reviews</span>
+        </div>
+        <div class="card-locked">
+          <div class="card-locked-fields">
+            <div><div class="clf-label">Price / meal</div><div class="clf-blur">₹300–420</div></div>
+            <div><div class="clf-label">Contact</div><div class="clf-blur">+91 87654</div></div>
+          </div>
+          <button class="btn-lock-signin">
+            <div class="g-icon"><svg width="10" height="10" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg></div>
+            Sign in with Google to view
+          </button>
+        </div>
+      </div>
+      <div class="card-foot">
+        <button class="cfp">View profile</button>
+        <button class="cfs">Reviews (11)</button>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="cook-card fade-in" style="transition-delay:0.2s">
+      <div class="card-body">
+        <div class="card-head">
+          <div class="av-circle av-blue">S</div>
+          <div>
+            <div class="card-name-text">Suresh Nair</div>
+            <div class="card-cuisine-text">Tamil Brahmin · Konkani · Saatvik</div>
+            <div class="v-badge" style="margin-top:4px;">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1A6B4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Verified cook
+            </div>
+          </div>
+        </div>
+        <div class="vouch-strip">
+          <div class="vouch-avs"><div class="vav">V</div><div class="vav">G</div><div class="vav">L</div><div class="vav">M</div><div class="vav">D</div></div>
+          <span class="vouches-text">Vouched by 5 past clients</span>
+        </div>
+        <div class="card-meta-grid">
+          <div class="cm"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1C4.79 1 3 2.79 3 5c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4z" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="5" r="1.2" stroke="currentColor" stroke-width="1.2"/></svg>Jayanagar</div>
+          <div class="cm"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3.5l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Daily 6:30–9am</div>
+          <div class="cm"><svg viewBox="0 0 14 14" fill="none"><path d="M2 10c0-2.5 2-4 5-4s5 1.5 5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="4" r="2" stroke="currentColor" stroke-width="1.2"/></svg>Pure veg</div>
+          <div class="cm"><svg viewBox="0 0 14 14" fill="none"><path d="M3 11V7M7 11V3M11 11V5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>20 bookings/mo</div>
+        </div>
+        <div class="card-stars">
+          <span style="font-size:13px;color:#C17B2A;letter-spacing:1px;">★★★★★</span>
+          <span style="font-size:13px;font-weight:500;color:var(--ink);">5.0</span>
+          <span style="font-size:12px;color:var(--ink4);">· 31 reviews</span>
+        </div>
+        <div class="card-locked">
+          <div class="card-locked-fields">
+            <div><div class="clf-label">Price / meal</div><div class="clf-blur">₹400–520</div></div>
+            <div><div class="clf-label">Contact</div><div class="clf-blur">+91 76543</div></div>
+          </div>
+          <button class="btn-lock-signin">
+            <div class="g-icon"><svg width="10" height="10" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg></div>
+            Sign in with Google to view
+          </button>
+        </div>
+      </div>
+      <div class="card-foot">
+        <button class="cfp">View profile</button>
+        <button class="cfs">Reviews (31)</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div id="how" class="how-section">
+  <div class="section">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">The process</div>
+      <h2 class="section-h2">How Quickcook works</h2>
+      <p class="section-sub">From first visit to weekly home-cooked meals in four steps.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step fade-in">
+        <div class="step-icon">
+          <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.3"/><path d="M10 6v4.5l3 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+        <div class="step-num">01</div>
+        <div class="step-title">Browse vetted cooks</div>
+        <div class="step-body">Search by area and cuisine. Every listing is live only after a background check and minimum 3 client vouches.</div>
+      </div>
+      <div class="step fade-in" style="transition-delay:0.1s">
+        <div class="step-icon">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 2L12.5 7h5.5l-4.5 3.3 1.7 5.2L10 12.5l-5.2 3 1.7-5.2L2 7h5.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="step-num">02</div>
+        <div class="step-title">Sign in to unlock</div>
+        <div class="step-body">Sign in with Google to see pricing and contact details. Your details stay private — cooks can't see your number either.</div>
+      </div>
+      <div class="step fade-in" style="transition-delay:0.2s">
+        <div class="step-icon">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4 4h12v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4z" stroke="currentColor" stroke-width="1.3"/><path d="M8 4V2M12 4V2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+        <div class="step-num">03</div>
+        <div class="step-title">Connect and agree terms</div>
+        <div class="step-body">Reach out via WhatsApp or in-app chat. Discuss menu, timings, and frequency directly — then confirm your recurring schedule.</div>
+      </div>
+      <div class="step fade-in" style="transition-delay:0.3s">
+        <div class="step-icon">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4 10l5 5 7-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="step-num">04</div>
+        <div class="step-title">Leave a verified review</div>
+        <div class="step-body">After your first week, leave a verified review. Your review becomes a vouch that helps the cook build their reputation.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRUST PILLARS -->
+<div class="section">
+  <div class="section-header fade-in">
+    <div class="section-eyebrow">Why Quickcook</div>
+    <h2 class="section-h2">Built on trust, not just ratings</h2>
+    <p class="section-sub">Any app can have star ratings. We built something harder to fake.</p>
+  </div>
+  <div class="trust-grid">
+    <div class="trust-card fade-in">
+      <div class="trust-icon-wrap" style="background:var(--green-light);">
+        <svg viewBox="0 0 22 22" fill="none" style="color:var(--green)"><path d="M11 2l2 5.5H19l-4.9 3.6 1.9 5.9L11 13.5l-5 3.5 1.9-5.9L3 7.5h6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="trust-title">Client-vouched first</div>
+      <div class="trust-body">Cooks can't list until real past clients vouch for them. No self-promotion, no fake profiles — social proof from people who actually hired them.</div>
+    </div>
+    <div class="trust-card fade-in" style="transition-delay:0.1s">
+      <div class="trust-icon-wrap" style="background:#E6F1FB;">
+        <svg viewBox="0 0 22 22" fill="none" style="color:#185FA5"><rect x="4" y="8" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M8 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <div class="trust-title">Background checked</div>
+      <div class="trust-body">Every cook goes through an independent background verification before their profile goes live. You know who's entering your home.</div>
+    </div>
+    <div class="trust-card fade-in" style="transition-delay:0.2s">
+      <div class="trust-icon-wrap" style="background:var(--amber-light);">
+        <svg viewBox="0 0 22 22" fill="none" style="color:var(--amber)"><path d="M11 3C7.69 3 5 5.69 5 9c0 4.5 6 11 6 11s6-6.5 6-11c0-3.31-2.69-6-6-6z" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="9" r="2" stroke="currentColor" stroke-width="1.3"/></svg>
+      </div>
+      <div class="trust-title">Hyper-local</div>
+      <div class="trust-body">We focus on Bengaluru neighbourhoods first. Your cook likely lives nearby — that's a relationship, not a transaction.</div>
+    </div>
+    <div class="trust-card fade-in" style="transition-delay:0.3s">
+      <div class="trust-icon-wrap" style="background:#FAECE7;">
+        <svg viewBox="0 0 22 22" fill="none" style="color:#7B3322"><path d="M4 11c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7-7-3.13-7-7z" stroke="currentColor" stroke-width="1.3"/><path d="M8 11l2.5 2.5L14 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="trust-title">Recurring relationships</div>
+      <div class="trust-body">Weekly meal prep, not one-off gigs. Once you find your cook, they learn your preferences, your schedule, and your kitchen.</div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div style="background:white;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="section">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">From real households</div>
+      <h2 class="section-h2">What people are saying</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card fade-in">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">"Found Meera through a neighbour's vouch. She's been cooking for us every weekday for 4 months. We don't even think about it anymore — it just happens."</div>
+        <div class="testi-author">
+          <div class="testi-av" style="background:var(--green-light);color:var(--green);">P</div>
+          <div><div class="testi-name">Priya R.</div><div class="testi-location">Koramangala, Bengaluru</div></div>
+        </div>
+      </div>
+      <div class="testi-card fade-in" style="transition-delay:0.1s">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">"The background check gave me confidence. Two kids at home — I needed to know exactly who was coming in. Quickcook made that clear from the start."</div>
+        <div class="testi-author">
+          <div class="testi-av" style="background:#E6F1FB;color:#0C447C;">A</div>
+          <div><div class="testi-name">Anand K.</div><div class="testi-location">Indiranagar, Bengaluru</div></div>
+        </div>
+      </div>
+      <div class="testi-card fade-in" style="transition-delay:0.2s">
+        <div class="testi-stars">★★★★☆</div>
+        <div class="testi-quote">"As a cook, this platform actually helped me formalise what I was already doing. My clients vouched for me, and now I get 3x more regular bookings."</div>
+        <div class="testi-author">
+          <div class="testi-av" style="background:#FAECE7;color:#7B3322;">S</div>
+          <div><div class="testi-name">Suresh N.</div><div class="testi-location">Cook · Jayanagar</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <h2 class="cta-h2">Ready for home-cooked food<br>you can <em>actually trust?</em></h2>
+  <p class="cta-sub">Join Quickcook — find a verified cook in your neighbourhood today.</p>
+  <div class="cta-btns">
+    <button class="btn-cta-p">Find a cook near me</button>
+    <button class="btn-cta-s">List your cooking services</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">Quickcook</span>
+    <span class="footer-copy">© 2025 Quickcook · Bengaluru, India · Every cook is verified.</span>
+  </div>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>

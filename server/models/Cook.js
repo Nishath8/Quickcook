@@ -30,6 +30,18 @@ const cookSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  vouchCount: {
+    type: Number,
+    default: 0
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: false // Kept optional for backwards compatibility
+  },
+  images: [{
+    type: String
+  }],
   status: {
     type: String,
     enum: ['pending', 'approved', 'denied'],
