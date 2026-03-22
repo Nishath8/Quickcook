@@ -82,17 +82,19 @@ export default function CookCard({ cook }) {
           </div>
         </div>
 
-        {/* Vouch Bar */}
-        <div className="bg-[#E4F2EA] rounded-2xl px-4 py-3 flex items-center gap-3 mb-6">
-          <div className="flex -space-x-2">
-            {['R', 'S', 'A', 'P'].map((init, i) => (
-              <div key={i} className="w-7 h-7 rounded-full border-2 border-[#E4F2EA] bg-[#1A6B4A] text-white text-[10px] flex items-center justify-center font-bold">
-                {init}
-              </div>
-            ))}
+        {/* Vouch Bar - Only show if count > 0 */}
+        {cook.vouchCount > 0 && (
+          <div className="bg-[#E4F2EA] rounded-2xl px-4 py-3 flex items-center gap-3 mb-6">
+            <div className="flex -space-x-2">
+              {['R', 'S', 'A', 'P'].map((init, i) => (
+                <div key={i} className="w-7 h-7 rounded-full border-2 border-[#E4F2EA] bg-[#1A6B4A] text-white text-[10px] flex items-center justify-center font-bold">
+                  {init}
+                </div>
+              ))}
+            </div>
+            <span className="text-[#1A6B4A] text-sm font-bold">Vouched by {cook.vouchCount} {cook.vouchCount === 1 ? 'client' : 'clients'}</span>
           </div>
-          <span className="text-[#1A6B4A] text-sm font-bold">Vouched by {cook.vouchCount || 0} past clients</span>
-        </div>
+        )}
 
         {/* 2x2 Meta Grid */}
         <div className="grid grid-cols-2 gap-y-4 gap-x-6 mb-8 mt-2">
@@ -127,21 +129,23 @@ export default function CookCard({ cook }) {
 
         {/* Pricing Overlay Block */}
         <div className="bg-[#F8F6F2] rounded-[24px] p-6 mb-4">
-          <div className="flex justify-between mb-4">
-            <div>
+          <div className="flex justify-between items-start gap-4 mb-4">
+            <div className="flex-1">
               <div className="text-[10px] font-bold text-[#A8A69F] uppercase tracking-wider mb-1">Price / meal</div>
               {user ? (
-                <div className="text-lg font-bold text-[#1A1917]">{cook.price_range}</div>
+                <div className="text-base font-bold text-[#1A1917] whitespace-nowrap">{cook.price_range}</div>
               ) : (
-                <div className="text-lg font-bold text-[#1A1917] blur-sm select-none">₹380–480</div>
+                <div className="text-base font-bold text-[#1A1917] blur-sm select-none">₹380–480</div>
               )}
             </div>
-            <div className="text-right">
+            <div className="flex-1 text-right">
               <div className="text-[10px] font-bold text-[#A8A69F] uppercase tracking-wider mb-1">Contact</div>
               {user ? (
-                <div className="text-lg font-bold text-[#1A1917]">{cook.contact}</div>
+                <div className="text-base font-bold text-[#1A1917] whitespace-nowrap overflow-hidden text-ellipsis">
+                  {cook.contact}
+                </div>
               ) : (
-                <div className="text-lg font-bold text-[#1A1917] blur-sm select-none">+91 98765</div>
+                <div className="text-base font-bold text-[#1A1917] blur-sm select-none">+91 98765</div>
               )}
             </div>
           </div>
