@@ -66,6 +66,34 @@ const googleLogin = async (req, res) => {
   }
 };
 
+const trackContactedCook = async (req, res) => {
+  try {
+    const { cookId } = req.body;
+    const userId = req.user.userId;
+
+    if (!cookId) {
+      return res.status(400).json({ message: 'Cook ID is required' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Add to contacted list if not already present
+    if (!user.contactedCooks.includes(cookId)) {
+      user.contactedCooks.push(cookId);
+      await user.save();
+    }
+
+    res.json({ message: 'Cook added to contact history', contactedCooks: user.contactedCooks });
+  } catch (error) {
+    console.error('Track Contact Error:', error);
+    res.status(500).json({ message: 'Failed to update contact history' });
+  }
+};
+
 module.exports = {
-  googleLogin
+  googleLogin,
+  trackContactedCook
 };

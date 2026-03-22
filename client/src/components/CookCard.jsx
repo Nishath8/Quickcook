@@ -3,11 +3,33 @@ import { useAuth } from '../context/AuthContext';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import ReviewModal from './ReviewModal';
+import axios from 'axios';
+import { CheckCircle, MapPin, Utensils, DollarSign, Phone, Star } from 'lucide-react';
 
 export default function CookCard({ cook }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user, login } = useAuth();
+  const { user, login, token, updateUserHistory } = useAuth();
   const navigate = useNavigate();
+  
+  const isContacted = user?.contactedCooks?.includes(cook._id);
+
+  const handleContactClick = async () => {
+    if (!user || !token || isContacted) return;
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/track-contact`,
+        { cookId: cook._id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      if (updateUserHistory) {
+        updateUserHistory(res.data.contactedCooks);
+      }
+    } catch (err) {
+      console.error('Failed to track contact:', err);
+    }
+  };
   
   const initials = cook.name?.[0]?.toUpperCase() || 'C';
   const getAvatarClass = () => {
@@ -25,7 +47,13 @@ export default function CookCard({ cook }) {
   });
 
   return (
-    <div className="cook-card overflow-hidden">
+    <div className="cook-card overflow-hidden relative group">
+      {isContacted && (
+        <div className="absolute top-4 right-4 bg-green-500 text-white px-2 py-1 rounded-md text-[10px] font-bold flex items-center shadow-sm z-10 animate-in fade-in zoom-in duration-300">
+          <CheckCircle className="w-3 h-3 mr-1" />
+          CONTACTED
+        </div>
+      )}
       {cook.status === 'approved' && (
         <div className="preview-tag ml-6 mt-6 mb-[-10px] w-max">
           <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1A6B4A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -75,8 +103,14 @@ export default function CookCard({ cook }) {
             <div className="flex-1">
               <div className="clf-label text-gray-500 mb-1">Contact</div>
               {user && cook.contact ? (
-                <div className="clf-value text-gray-900">
-                  <a href={`tel:${cook.contact.replace(/[^\d+]/g, '')}`}>{cook.contact}</a>
+                <div className="clf-value text-gray-900 font-medium">
+                  <a 
+                    href={`tel:${cook.contact.replace(/[^\d+]/g, '')}`} 
+                    onClick={handleContactClick}
+                    className="hover:text-primary-600 transition-colors"
+                  >
+                    {cook.contact}
+                  </a>
                 </div>
               ) : (
                 <div className="clf-blur filter blur-sm select-none text-gray-300">+91 98765</div>
