@@ -63,7 +63,7 @@ export default function CookProfile() {
             </div>
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-3 mb-2">
-                <h1 className="text-3xl font-extrabold">{cook.name}</h1>
+                <h1 className="text-4xl">{cook.name}</h1>
                 {cook.status === 'approved' && (
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/20 text-green-300 border border-green-500/30">
                     <ShieldCheck className="w-3.5 h-3.5 mr-1" />
@@ -207,7 +207,7 @@ export default function CookProfile() {
         {/* Reviews Section */}
         <div className="p-8 bg-gray-50">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-black text-gray-900 tracking-tight">Client Reviews ({reviews.length})</h2>
+            <h2 className="text-3xl text-gray-900">Client Reviews ({reviews.length})</h2>
             {reviews.filter(r => r.isVouch).length > 0 && (
               <div className="flex items-center gap-2 bg-[#1A6B4A]/10 px-4 py-2 rounded-full border border-[#1A6B4A]/20">
                 <ShieldCheck className="w-4 h-4 text-[#1A6B4A]" />

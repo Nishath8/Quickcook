@@ -61,8 +61,8 @@ body {
   --border: rgba(26,25,23,0.1);
   --border2: rgba(26,25,23,0.06);
   --card: #FFFFFF;
-  --serif: 'Lora', Georgia, serif;
-  --sans: 'DM Sans', system-ui, sans-serif;
+  --serif: 'Instrument Serif', 'Lora', serif;
+  --sans: 'Inter Tight', 'DM Sans', sans-serif;
   --r: 20px;
   --r-sm: 12px;
 }
@@ -76,6 +76,17 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+h4, h5, h6 {
+  font-family: var(--sans);
+  font-weight: 600;
 }
 
 /* ── NAV ── */

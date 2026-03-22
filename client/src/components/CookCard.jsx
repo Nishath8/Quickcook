@@ -65,8 +65,8 @@ export default function CookCard({ cook }) {
         <div className="card-head">
           <div className={`av-circle ${getAvatarClass()}`}>{initials}</div>
           <div>
-            <div className="card-name-text text-lg font-bold">{cook.name}</div>
-            <div className="card-cuisine-text text-gray-500">{cook.cuisine}</div>
+            <div className="card-name-text text-xl" style={{ fontFamily: 'var(--serif)' }}>{cook.name}</div>
+            <div className="card-cuisine-text text-gray-500 text-sm">{cook.cuisine}</div>
             <div className="v-badge" style={{marginTop:'4px'}}>
               <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#1A6B4A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
               Background checked
