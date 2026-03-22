@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { MapPin, Utensils, DollarSign, Phone, Star, ShieldCheck, ChevronLeft, Image as ImageIcon, Clock } from 'lucide-react';
+import { MapPin, Utensils, DollarSign, Phone, Star, ShieldCheck, ChevronLeft, Image as ImageIcon, Clock, PlusCircle } from 'lucide-react';
+import ReviewModal from '../components/ReviewModal';
 
 export default function CookProfile() {
   const { id } = useParams();
@@ -13,6 +14,7 @@ export default function CookProfile() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   useEffect(() => {
     fetchCookData();
@@ -116,6 +118,16 @@ export default function CookProfile() {
                 {cook.contact}
               </a>
             </div>
+            <button 
+              onClick={() => {
+                if (!user) { navigate('/'); return; } 
+                setIsReviewModalOpen(true);
+              }}
+              className="flex items-center justify-center bg-[#1A1917] hover:bg-black text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-md active:scale-95 gap-2"
+            >
+              <PlusCircle className="w-5 h-5" />
+              Write a Review
+            </button>
           </div>
         </div>
 
@@ -236,7 +248,7 @@ export default function CookProfile() {
                     <div className="flex items-center space-x-3">
                       {review.userId?.avatar ? (
                         <img src={review.userId.avatar} alt="Avatar" className="w-8 h-8 rounded-full shadow-sm" />
-                      ) : (
+                       ) : (
                         <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
                           <span className="text-sm text-primary-700 font-bold">{review.userId?.name?.charAt(0) || '?'}</span>
                         </div>
@@ -268,6 +280,16 @@ export default function CookProfile() {
         </div>
 
       </div>
+
+      {isReviewModalOpen && (
+        <ReviewModal 
+          cook={cook} 
+          onClose={() => {
+            setIsReviewModalOpen(false);
+            fetchCookData(); // Refresh to show new review
+          }} 
+        />
+      )}
     </div>
   );
 }
