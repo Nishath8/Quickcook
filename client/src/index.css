@@ -609,3 +609,12 @@ footer.custom-footer {
   .hero-trust { display: grid; grid-template-columns: 1fr; gap: 8px; border: none; padding-top: 1rem; }
   .nav-logo { font-size: 18px; }
 }
+
+/* ── UTILS ── */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

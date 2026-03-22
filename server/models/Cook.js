@@ -22,6 +22,29 @@ const cookSchema = new mongoose.Schema({
   contact: {
     type: String
   },
+  dietary_preferences: [{
+    type: String,
+    enum: ['Veg', 'Non-Veg', 'Vegan', 'Jain'],
+    default: ['Veg']
+  }],
+  availability: {
+    type: Map,
+    of: [String],
+    default: {
+      "Mon": ["Morning", "Afternoon", "Evening"],
+      "Tue": ["Morning", "Afternoon", "Evening"],
+      "Wed": ["Morning", "Afternoon", "Evening"],
+      "Thu": ["Morning", "Afternoon", "Evening"],
+      "Fri": ["Morning", "Afternoon", "Evening"],
+      "Sat": ["Morning", "Afternoon", "Evening"],
+      "Sun": ["Morning", "Afternoon", "Evening"]
+    }
+  },
+  sample_menu: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   averageRating: {
     type: Number,
     default: 0

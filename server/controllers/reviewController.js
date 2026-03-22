@@ -16,7 +16,7 @@ const getCookReviews = async (req, res) => {
 // POST /reviews
 const addReview = async (req, res) => {
   try {
-    const { cookId, rating, comment } = req.body;
+    const { cookId, rating, comment, isVouch } = req.body;
     const userId = req.user.userId;
 
     if (!rating || rating < 1 || rating > 5) {
@@ -29,13 +29,13 @@ const addReview = async (req, res) => {
       return res.status(400).json({ message: 'You have already reviewed this cook' });
     }
 
-    const review = new Review({ cookId, userId, rating, comment });
+    const review = new Review({ cookId, userId, rating, comment, isVouch: !!isVouch });
     await review.save();
 
     // Dynamically calculate and update the Cook's new average rating and vouches
     const allReviews = await Review.find({ cookId });
     const avgRating = allReviews.reduce((acc, item) => item.rating + acc, 0) / allReviews.length;
-    const vouchCount = allReviews.filter(item => item.rating >= 4).length;
+    const vouchCount = allReviews.filter(item => item.isVouch === true).length;
     
     await Cook.findByIdAndUpdate(cookId, {
       averageRating: parseFloat(avgRating.toFixed(1)),
@@ -66,7 +66,7 @@ const deleteReview = async (req, res) => {
     const avgRating = allReviews.length > 0 
       ? allReviews.reduce((acc, item) => item.rating + acc, 0) / allReviews.length 
       : 0;
-    const vouchCount = allReviews.filter(item => item.rating >= 4).length;
+    const vouchCount = allReviews.filter(item => item.isVouch === true).length;
     
     await Cook.findByIdAndUpdate(cookId, {
       averageRating: parseFloat(avgRating.toFixed(1)),

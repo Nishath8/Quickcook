@@ -9,7 +9,7 @@ export default function Home() {
   const [cooks, setCooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({ location: '', cuisine: '' });
+  const [filters, setFilters] = useState({ location: '', cuisine: '', dietary: '' });
 
   // Debounce effect to avoid too many API calls
   useEffect(() => {
@@ -21,6 +21,7 @@ export default function Home() {
         const params = new URLSearchParams();
         if (filters.location) params.append('location', filters.location);
         if (filters.cuisine) params.append('cuisine', filters.cuisine);
+        if (filters.dietary) params.append('dietary', filters.dietary);
 
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/cooks?${params.toString()}`);
         setCooks(response.data);

@@ -82,6 +82,19 @@ export default function CookCard({ cook }) {
 
         <div className="card-meta-grid text-sm text-gray-600 space-y-2 mb-4">
           <div className="cm flex items-center space-x-2"><svg className="w-4 h-4 text-gray-400" viewBox="0 0 14 14" fill="none"><path d="M7 1C4.79 1 3 2.79 3 5c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4z" stroke="currentColor" strokeWidth="1.2"/><circle cx="7" cy="5" r="1.2" stroke="currentColor" strokeWidth="1.2"/></svg><span>{cook.location}</span></div>
+          {cook.dietary_preferences?.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-1">
+              {cook.dietary_preferences.map(diet => (
+                <span key={diet} className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase ${
+                  diet === 'Veg' ? 'bg-green-100 text-green-700' : 
+                  diet === 'Non-Veg' ? 'bg-red-100 text-red-700' : 
+                  'bg-blue-100 text-blue-700'
+                }`}>
+                  {diet}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="card-stars flex items-center space-x-2 mb-4">

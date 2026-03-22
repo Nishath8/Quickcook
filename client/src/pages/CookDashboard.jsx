@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ChefHat, Image as ImageIcon, UploadCloud, Link as LinkIcon, Camera, CheckCircle, AlertCircle } from 'lucide-react';
+import { ChefHat, Image as ImageIcon, UploadCloud, Link as LinkIcon, Camera, CheckCircle, AlertCircle, MessageSquare } from 'lucide-react';
 
 export default function CookDashboard() {
   const { user, token } = useAuth();
@@ -18,8 +18,25 @@ export default function CookDashboard() {
   const [message, setMessage] = useState({ text: '', type: '' });
   
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    if (type === 'checkbox' && name === 'dietary_preferences') {
+      const updatedDiet = checked 
+        ? [...(formData.dietary_preferences || []), value]
+        : (formData.dietary_preferences || []).filter(d => d !== value);
+      setFormData(prev => ({ ...prev, dietary_preferences: updatedDiet }));
+    } else if (name.startsWith('avail_')) {
+      const [_, day, slot] = name.split('_');
+      const dayAvail = (formData.availability && formData.availability[day]) || [];
+      const updatedDayAvail = checked 
+        ? [...dayAvail, slot]
+        : dayAvail.filter(s => s !== slot);
+      setFormData(prev => ({
+        ...prev,
+        availability: { ...(prev.availability || {}), [day]: updatedDayAvail }
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleFileChange = (e) => {
@@ -54,7 +71,12 @@ export default function CookDashboard() {
           location: myCook.location,
           cuisine: myCook.cuisine,
           price_range: myCook.price_range || '',
-          contact: myCook.contact || ''
+          contact: myCook.contact || '',
+          dietary_preferences: myCook.dietary_preferences || [],
+          sample_menu: myCook.sample_menu || '',
+          availability: myCook.availability || {
+            "Mon": [], "Tue": [], "Wed": [], "Thu": [], "Fri": [], "Sat": [], "Sun": []
+          }
         });
       }
     } catch (err) {
@@ -139,6 +161,29 @@ export default function CookDashboard() {
         <p className="text-[#6E6C67] text-lg font-light tracking-wide italic">Manage your cook profile, update availability, and upload proof of work.</p>
       </div>
 
+      {/* Vouch Request Section (New) */}
+      <div className="mb-12 bg-green-50 border border-green-100 rounded-[32px] p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+        <div className="flex-1">
+          <h3 className="text-xl font-bold text-green-900 mb-2 flex items-center gap-2">
+            <MessageSquare className="w-5 h-5" />
+            Boost your reputation with Vouches
+          </h3>
+          <p className="text-green-700 text-sm leading-relaxed max-w-xl">
+            Ask past clients to vouch for your cooking. Profiles with 3+ vouches get 5x more inquiries in Indiranagar and Koramangala.
+          </p>
+        </div>
+        <button 
+          onClick={() => {
+            const text = `Hi! I'm listing my services on Quickcook. Since I've cooked for you before, would you mind vouching for me here? ${window.location.origin}/cook/${profile._id}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+          }}
+          className="bg-[#1A6B4A] hover:bg-[#2D8C60] text-white px-8 py-4 rounded-2xl font-bold text-sm shadow-md transition-all active:scale-95 flex items-center gap-3 shrink-0"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          Request on WhatsApp
+        </button>
+      </div>
+
       {message.text && (
         <div className={`mb-10 p-5 rounded-2xl flex items-center border shadow-sm ${
           message.type === 'success' ? 'bg-[#E4F2EA] text-[#1A6B4A] border-[#CEEBDC]' : 'bg-[#FAECE7] text-[#7B3322] border-[#F2DDD7]'
@@ -214,6 +259,79 @@ export default function CookDashboard() {
                   <option value="$$$">$$$ (Premium)</option>
                   <option value="$$$$">$$$$ (Elite)</option>
                 </select>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-4 block">Dietary Specialties</label>
+                <div className="flex flex-wrap gap-4">
+                  {['Veg', 'Non-Veg', 'Vegan', 'Jain'].map(diet => (
+                    <label key={diet} className="flex items-center group cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="dietary_preferences"
+                        value={diet}
+                        checked={formData.dietary_preferences?.includes(diet)}
+                        onChange={handleInputChange}
+                        className="hidden"
+                      />
+                      <div className={`px-4 py-2 rounded-xl border text-sm font-bold transition-all ${
+                        formData.dietary_preferences?.includes(diet) 
+                        ? 'bg-[#1A6B4A] border-[#1A6B4A] text-white shadow-md' 
+                        : 'bg-white border-[#E5E0D8] text-[#6E6C67] hover:border-[#1A6B4A]'
+                      }`}>
+                        {diet}
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-2 block">Sample Menu / Featured Dishes</label>
+                <textarea
+                  name="sample_menu"
+                  value={formData.sample_menu || ''}
+                  onChange={handleInputChange}
+                  rows="4"
+                  className="w-full px-6 py-4.5 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all text-[#1A1917] bg-[#F7F4EE]/20 font-medium resize-none"
+                  placeholder="Tell clients what you cook best..."
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-4 block">Weekly Schedule</label>
+                <div className="overflow-x-auto bg-[#F7F4EE]/40 rounded-3xl p-6 border border-[#E5E0D8]">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr>
+                        <th className="pb-4 text-[10px] text-[#A8A69F] uppercase tracking-widest">Day</th>
+                        {['Morning', 'Afternoon', 'Evening'].map(slot => (
+                          <th key={slot} className="pb-4 text-[10px] text-[#A8A69F] uppercase tracking-widest text-center">{slot}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
+                        <tr key={day} className="border-t border-[#E5E0D8]/40">
+                          <td className="py-3 text-xs font-bold text-[#1A1917]">{day}</td>
+                          {['Morning', 'Afternoon', 'Evening'].map(slot => (
+                            <td key={slot} className="py-3 text-center">
+                              <label className="inline-block p-1 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  name={`avail_${day}_${slot}`}
+                                  checked={(formData.availability && formData.availability[day] || []).includes(slot)}
+                                  onChange={handleInputChange}
+                                  className="w-5 h-5 accent-[#1A6B4A] rounded-lg cursor-pointer"
+                                />
+                              </label>
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 

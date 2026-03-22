@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { X, Star, MessageSquare, Trash2, PlusCircle } from 'lucide-react';
+import { X, Star, MessageSquare, Trash2, PlusCircle, ShieldCheck } from 'lucide-react';
 
 export default function ReviewModal({ cook, onClose }) {
   const { user, token } = useAuth();
@@ -13,6 +13,7 @@ export default function ReviewModal({ cook, onClose }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [writeMode, setWriteMode] = useState(false);
+  const [isVouch, setIsVouch] = useState(false);
 
   useEffect(() => {
     fetchReviews();
@@ -46,11 +47,12 @@ export default function ReviewModal({ cook, onClose }) {
     try {
       await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/reviews`,
-        { cookId: cook._id, rating, comment },
+        { cookId: cook._id, rating, comment, isVouch },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setComment('');
       setRating(5);
+      setIsVouch(false);
       setWriteMode(false);
       fetchReviews();
     } catch (err) {
@@ -112,6 +114,27 @@ export default function ReviewModal({ cook, onClose }) {
                     ))}
                   </div>
                 </div>
+
+                {rating >= 4 && (
+                  <div className="bg-green-50 p-6 rounded-2xl border border-green-100 flex items-center justify-between animate-in slide-in-from-top-2">
+                    <div>
+                      <h4 className="text-sm font-bold text-green-900 flex items-center gap-2">
+                        <ShieldCheck className="w-4 h-4" />
+                        Formal Vouch
+                      </h4>
+                      <p className="text-xs text-green-700 mt-1">Have you hired this cook before? Vouching builds their official reputation.</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        checked={isVouch} 
+                        onChange={(e) => setIsVouch(e.target.checked)}
+                        className="sr-only peer" 
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1A6B4A]"></div>
+                    </label>
+                  </div>
+                )}
 
                 <div className="flex-1 flex flex-col">
                   <label className="block text-[11px] font-bold uppercase tracking-widest text-[#A8A69F] mb-3 px-1">Describe your meal</label>
@@ -184,7 +207,15 @@ export default function ReviewModal({ cook, onClose }) {
                           </div>
                         )}
                         <div>
-                          <p className="text-sm font-bold text-[#1A1917]">{review.userId?.name || 'Quickcook Client'}</p>
+                          <p className="text-sm font-bold text-[#1A1917] flex items-center gap-2">
+                            {review.userId?.name || 'Quickcook Client'}
+                            {review.isVouch && (
+                              <span className="inline-flex items-center bg-green-100 text-green-700 text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter border border-green-200">
+                                <ShieldCheck className="w-2.5 h-2.5 mr-0.5 fill-current" />
+                                Vouch
+                              </span>
+                            )}
+                          </p>
                           <div className="flex items-center mt-0.5">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <Star key={star} className={`w-3 h-3 ${review.rating >= star ? 'text-[#C17B2A] fill-current' : 'text-[#E5E0D8]'}`} />

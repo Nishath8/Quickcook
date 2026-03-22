@@ -19,15 +19,37 @@ export default function AddCook() {
     location: '',
     cuisine: '',
     price_range: '',
-    contact: ''
+    contact: '',
+    dietary_preferences: [],
+    sample_menu: '',
+    availability: {
+      "Mon": [], "Tue": [], "Wed": [], "Thu": [], "Fri": [], "Sat": [], "Sun": []
+    }
   });
 
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [message, setMessage] = useState('');
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    if (type === 'checkbox' && name === 'dietary_preferences') {
+      const updatedDiet = checked 
+        ? [...formData.dietary_preferences, value]
+        : formData.dietary_preferences.filter(d => d !== value);
+      setFormData(prev => ({ ...prev, dietary_preferences: updatedDiet }));
+    } else if (name.startsWith('avail_')) {
+      const [_, day, slot] = name.split('_');
+      const dayAvail = formData.availability[day] || [];
+      const updatedDayAvail = checked 
+        ? [...dayAvail, slot]
+        : dayAvail.filter(s => s !== slot);
+      setFormData(prev => ({
+        ...prev,
+        availability: { ...prev.availability, [day]: updatedDayAvail }
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -167,6 +189,79 @@ export default function AddCook() {
                   onChange={handleChange}
                   className="w-full px-5 py-4 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all placeholder-[#A8A69F] text-[#1A1917] bg-[#F7F4EE]/30"
                   placeholder="+91 ...."
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-4 block">Dietary Offerings</label>
+                <div className="flex flex-wrap gap-4">
+                  {['Veg', 'Non-Veg', 'Vegan', 'Jain'].map(diet => (
+                    <label key={diet} className="flex items-center group cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="dietary_preferences"
+                        value={diet}
+                        checked={formData.dietary_preferences.includes(diet)}
+                        onChange={handleChange}
+                        className="hidden"
+                      />
+                      <div className={`px-4 py-2 rounded-xl border text-sm font-bold transition-all ${
+                        formData.dietary_preferences.includes(diet) 
+                        ? 'bg-[#1A6B4A] border-[#1A6B4A] text-white shadow-md' 
+                        : 'bg-white border-[#E5E0D8] text-[#6E6C67] hover:border-[#1A6B4A]'
+                      }`}>
+                        {diet}
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-4 block">Availability Slots</label>
+                <div className="overflow-x-auto bg-[#F7F4EE]/30 rounded-2xl p-4 border border-[#E5E0D8]">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr>
+                        <th className="p-2 text-[10px] text-[#A8A69F] uppercase">Day</th>
+                        {['Morning', 'Afternoon', 'Evening'].map(slot => (
+                          <th key={slot} className="p-2 text-[10px] text-[#A8A69F] uppercase text-center">{slot}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
+                        <tr key={day} className="border-t border-[#E5E0D8]/30">
+                          <td className="p-2 text-xs font-bold text-[#1A1917]">{day}</td>
+                          {['Morning', 'Afternoon', 'Evening'].map(slot => (
+                            <td key={slot} className="p-2 text-center">
+                              <label className="inline-block p-1 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  name={`avail_${day}_${slot}`}
+                                  checked={(formData.availability[day] || []).includes(slot)}
+                                  onChange={handleChange}
+                                  className="w-4 h-4 accent-[#1A6B4A] rounded cursor-pointer"
+                                />
+                              </label>
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-2 block">Sample Menu / Specialities</label>
+                <textarea
+                  name="sample_menu"
+                  value={formData.sample_menu}
+                  onChange={handleChange}
+                  rows="3"
+                  className="w-full px-5 py-4 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all placeholder-[#A8A69F] text-[#1A1917] bg-[#F7F4EE]/30 resize-none"
+                  placeholder="e.g. Traditional Bengali Fish Curry, South Indian Breakfast Thali..."
                 />
               </div>
             </div>

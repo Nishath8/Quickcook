@@ -26,8 +26,23 @@ export default function Filters({ filters, onFilterChange }) {
             name="cuisine"
             value={filters.cuisine}
             onChange={handleChange}
-            placeholder="Cuisine — South Indian, Bengali, Jain…"
+            placeholder="Cuisine — Bengali, Jain…"
           />
+        </div>
+        <div className="search-field">
+          <Utensils className="w-4 h-4 text-[#A8A69F]" />
+          <select
+            name="dietary"
+            value={filters.dietary || ''}
+            onChange={handleChange}
+            className="bg-transparent border-none outline-none text-sm text-[#1A1917] flex-1 cursor-pointer"
+          >
+            <option value="">All Dietary</option>
+            <option value="Veg">Veg Only</option>
+            <option value="Non-Veg">Non-Veg</option>
+            <option value="Vegan">Vegan</option>
+            <option value="Jain">Jain</option>
+          </select>
         </div>
       </div>
     </div>

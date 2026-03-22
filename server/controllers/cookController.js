@@ -27,7 +27,7 @@ const createCook = async (req, res) => {
       submissionTracker.set(ip, [now]);
     }
 
-    let { name, location, cuisine, price_range, contact } = req.body;
+    let { name, location, cuisine, price_range, contact, dietary_preferences, availability, sample_menu } = req.body;
 
     if (!name || !location || !cuisine) {
       return res.status(400).json({ message: 'Name, location, and cuisine are required.' });
@@ -39,6 +39,7 @@ const createCook = async (req, res) => {
     cuisine = cuisine.trim();
     contact = contact ? contact.trim() : '';
     price_range = price_range ? price_range.trim() : '';
+    sample_menu = sample_menu ? sample_menu.trim() : '';
 
     // 3. Strict Length & Bounds Validation
     if (name.length < 2 || name.length > 50) return res.status(400).json({ message: 'Name must be between 2 and 50 characters.' });
@@ -72,7 +73,10 @@ const createCook = async (req, res) => {
       location, 
       cuisine, 
       price_range, 
-      contact, 
+      contact,
+      dietary_preferences: dietary_preferences || ['Veg'],
+      availability: availability || {},
+      sample_menu: sample_menu || '',
       status: 'pending',
       userId: req.user?.userId || null 
     });
@@ -90,10 +94,11 @@ const createCook = async (req, res) => {
 // GET /cooks
 const getApprovedCooks = async (req, res) => {
   try {
-    const { location, cuisine } = req.query;
+    const { location, cuisine, dietary } = req.query;
     const filter = { status: 'approved' };
     if (location) filter.location = { $regex: location, $options: 'i' };
     if (cuisine) filter.cuisine = { $regex: cuisine, $options: 'i' };
+    if (dietary) filter.dietary_preferences = { $in: dietary.split(',') };
     
     const cooks = await Cook.find(filter);
     res.json(cooks);
@@ -141,13 +146,16 @@ const updateCookStatus = async (req, res) => {
 // PUT /admin/cooks/:id
 const updateCookDetails = async (req, res) => {
   try {
-    const { name, location, cuisine, price_range, contact } = req.body;
+    const { name, location, cuisine, price_range, contact, dietary_preferences, availability, sample_menu } = req.body;
     const updateData = {};
     if (name) updateData.name = name;
     if (location) updateData.location = location;
     if (cuisine) updateData.cuisine = cuisine;
     if (price_range) updateData.price_range = price_range;
     if (contact) updateData.contact = contact;
+    if (dietary_preferences) updateData.dietary_preferences = dietary_preferences;
+    if (availability) updateData.availability = availability;
+    if (sample_menu !== undefined) updateData.sample_menu = sample_menu;
 
     const cook = await Cook.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!cook) return res.status(404).json({ message: 'Cook not found' });
@@ -167,14 +175,17 @@ const updateOwnProfile = async (req, res) => {
       return res.status(403).json({ message: 'You are not authorized to edit this profile' });
     }
 
-    const { name, location, cuisine, price_range, contact, images } = req.body;
+    const { name, location, cuisine, price_range, contact, images, dietary_preferences, availability, sample_menu } = req.body;
     let upData = {};
     if (name) upData.name = name;
     if (location) upData.location = location;
     if (cuisine) upData.cuisine = cuisine;
     if (price_range) upData.price_range = price_range;
     if (contact) upData.contact = contact;
-    if (images) upData.images = images; // Overwrite images array
+    if (images) upData.images = images; 
+    if (dietary_preferences) upData.dietary_preferences = dietary_preferences;
+    if (availability) upData.availability = availability;
+    if (sample_menu !== undefined) upData.sample_menu = sample_menu;
 
     const updatedCook = await Cook.findByIdAndUpdate(req.params.id, upData, { new: true });
     res.json({ message: 'Profile updated successfully', cook: updatedCook });
