@@ -108,48 +108,48 @@ export default function Layout() {
             
             <div className="flex flex-col p-6 space-y-3 overflow-y-auto">
               <Link 
-                className={`flex items-center gap-4 text-xl font-bold p-5 rounded-[24px] transition-all ${location.pathname === '/' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
+                className={`flex items-center gap-4 text-lg font-bold p-5 rounded-[24px] transition-all transform animate-in fade-in slide-in-from-bottom-4 duration-500 delay-[100ms] ${location.pathname === '/' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
                 to="/" 
                 onClick={() => setMobileMenuOpen(false)}
                 style={{ fontFamily: 'var(--sans)' }}
               >
-                <Search className={`w-6 h-6 ${location.pathname === '/' ? 'text-white' : 'text-[#A8A69F]'}`} />
+                <Search className={`w-5 h-5 ${location.pathname === '/' ? 'text-white' : 'text-[#A8A69F]'}`} />
                 Find a cook
               </Link>
 
               <Link 
-                className={`flex items-center gap-4 text-xl font-bold p-5 rounded-[24px] transition-all ${location.pathname === '/add' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
+                className={`flex items-center gap-4 text-lg font-bold p-5 rounded-[24px] transition-all transform animate-in fade-in slide-in-from-bottom-4 duration-500 delay-[150ms] ${location.pathname === '/add' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
                 to="/add" 
                 onClick={() => setMobileMenuOpen(false)}
                 style={{ fontFamily: 'var(--sans)' }}
               >
-                <PlusCircle className={`w-6 h-6 ${location.pathname === '/add' ? 'text-white' : 'text-[#A8A69F]'}`} />
+                <PlusCircle className={`w-5 h-5 ${location.pathname === '/add' ? 'text-white' : 'text-[#A8A69F]'}`} />
                 Add Your Services
               </Link>
 
               {user && (
                 <Link 
-                  className={`flex items-center gap-4 text-xl font-bold p-5 rounded-[24px] transition-all ${location.pathname === '/dashboard' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
+                  className={`flex items-center gap-4 text-lg font-bold p-5 rounded-[24px] transition-all transform animate-in fade-in slide-in-from-bottom-4 duration-500 delay-[200ms] ${location.pathname === '/dashboard' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
                   to="/dashboard" 
                   onClick={() => setMobileMenuOpen(false)}
                   style={{ fontFamily: 'var(--sans)' }}
                 >
-                  <LayoutDashboard className={`w-6 h-6 ${location.pathname === '/dashboard' ? 'text-white' : 'text-[#A8A69F]'}`} />
+                  <LayoutDashboard className={`w-5 h-5 ${location.pathname === '/dashboard' ? 'text-white' : 'text-[#A8A69F]'}`} />
                   Provider Dashboard
                 </Link>
               )}
 
               <Link 
-                className={`flex items-center gap-4 text-xl font-bold p-5 rounded-[24px] transition-all ${location.pathname === '/admin' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
+                className={`flex items-center gap-4 text-lg font-bold p-5 rounded-[24px] transition-all transform animate-in fade-in slide-in-from-bottom-4 duration-500 delay-[250ms] ${location.pathname === '/admin' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
                 to="/admin" 
                 onClick={() => setMobileMenuOpen(false)}
                 style={{ fontFamily: 'var(--sans)' }}
               >
-                <ShieldCheck className={`w-6 h-6 ${location.pathname === '/admin' ? 'text-white' : 'text-[#A8A69F]'}`} />
+                <ShieldCheck className={`w-5 h-5 ${location.pathname === '/admin' ? 'text-white' : 'text-[#A8A69F]'}`} />
                 Admin Panel
               </Link>
               
-              <div className="pt-6 mt-6 border-t border-[#E5E0D8]">
+              <div className="pt-6 mt-6 border-t border-[#E5E0D8] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-[300ms]">
                 {!user ? (
                   <button 
                     onClick={() => { gLogin(); setMobileMenuOpen(false); }}
