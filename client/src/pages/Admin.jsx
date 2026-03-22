@@ -221,15 +221,16 @@ export default function Admin() {
                           className="w-full px-3 py-2 border border-[#E5E0D8] rounded-lg focus:ring-1 focus:ring-[#1A6B4A] outline-none text-sm bg-white"
                           placeholder="Contact"
                         />
-                        <select 
-                          value={editData.price_range} 
+                        <select
+                          name="price_range"
+                          value={editData.price_range}
                           onChange={(e) => handleEditChange(e, 'price_range')}
-                          className="w-full px-3 py-2 border border-[#E5E0D8] rounded-lg focus:ring-1 focus:ring-[#1A6B4A] outline-none text-xs bg-white"
+                          className="w-full px-4 py-2 bg-white border border-[#E5E0D8] rounded-xl focus:ring-1 focus:ring-[#1A6B4A]"
                         >
-                          <option value="$">$ (Value)</option>
-                          <option value="$$">$$ (Standard)</option>
-                          <option value="$$$">$$$ (Premium)</option>
-                          <option value="$$$$">$$$$ (Elite)</option>
+                          <option value="₹250 - ₹500">₹250 - ₹500 (Value)</option>
+                          <option value="₹500 - ₹1,000">₹500 - ₹1,000 (Standard)</option>
+                          <option value="₹1,000 - ₹2,000">₹1,000 - ₹2,000 (Premium)</option>
+                          <option value="₹2,000+">₹2,000+ (Elite)</option>
                         </select>
                       </div>
                     ) : (
