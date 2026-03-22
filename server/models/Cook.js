@@ -45,6 +45,10 @@ const cookSchema = new mongoose.Schema({
     trim: true,
     default: ''
   },
+  profileImage: {
+    type: String,
+    default: ''
+  },
   averageRating: {
     type: Number,
     default: 0

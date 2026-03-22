@@ -179,15 +179,24 @@ export default function Admin() {
               {cooks.map((cook) => (
                 <tr key={cook._id} className={`${editingId === cook._id ? 'bg-[#F7F4EE]/50' : 'hover:bg-[#FCFBF9]'} transition-colors group`}>
                   <td className="px-8 py-6 whitespace-nowrap">
-                    {editingId === cook._id ? (
-                      <input 
-                        value={editData.name} 
-                        onChange={(e) => handleEditChange(e, 'name')}
-                        className="w-full px-3 py-2 border border-[#E5E0D8] rounded-lg focus:ring-1 focus:ring-[#1A6B4A] outline-none text-sm font-bold bg-white"
-                      />
-                    ) : (
-                      <div className="text-base font-bold text-[#1A1917] group-hover:text-[#1A6B4A] transition-colors">{cook.name}</div>
-                    )}
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full overflow-hidden bg-[#F7F4EE] border border-[#E5E0D8] shrink-0">
+                        {cook.profileImage ? (
+                          <img src={`${import.meta.env.VITE_API_BASE_URL}${cook.profileImage}`} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-xs font-bold text-[#A8A69F]">{cook.name?.charAt(0)}</div>
+                        )}
+                      </div>
+                      {editingId === cook._id ? (
+                        <input 
+                          value={editData.name} 
+                          onChange={(e) => handleEditChange(e, 'name')}
+                          className="w-full px-3 py-2 border border-[#E5E0D8] rounded-lg focus:ring-1 focus:ring-[#1A6B4A] outline-none text-sm font-bold bg-white"
+                        />
+                      ) : (
+                        <div className="text-base font-bold text-[#1A1917] group-hover:text-[#1A6B4A] transition-colors">{cook.name}</div>
+                      )}
+                    </div>
                   </td>
                   <td className="px-8 py-6">
                     {editingId === cook._id ? (

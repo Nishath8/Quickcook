@@ -63,7 +63,13 @@ export default function CookCard({ cook }) {
       
       <div className="card-body pb-0 pt-4">
         <div className="card-head">
-          <div className={`av-circle ${getAvatarClass()}`}>{initials}</div>
+          <div className={`av-circle overflow-hidden shadow-sm border-2 border-white ${getAvatarClass()}`}>
+            {cook.profileImage ? (
+              <img src={`${import.meta.env.VITE_API_BASE_URL}${cook.profileImage}`} alt={cook.name} className="w-full h-full object-cover" />
+            ) : (
+              initials
+            )}
+          </div>
           <div>
             <div className="card-name-text text-xl" style={{ fontFamily: 'var(--serif)' }}>{cook.name}</div>
             <div className="card-cuisine-text text-gray-500 text-sm">{cook.cuisine}</div>

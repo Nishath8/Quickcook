@@ -58,8 +58,12 @@ export default function CookProfile() {
         {/* Profile Header */}
         <div className="bg-[#1C1A17] p-8 text-white relative">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 relative z-10">
-            <div className="w-24 h-24 rounded-full bg-primary-100 text-primary-800 flex items-center justify-center text-4xl font-bold shadow-lg shadow-black/20 shrink-0">
-              {initials}
+            <div className="w-24 h-24 rounded-full bg-primary-100 text-primary-800 flex items-center justify-center text-4xl font-bold shadow-lg shadow-black/20 shrink-0 overflow-hidden border-4 border-white/10">
+              {cook.profileImage ? (
+                <img src={`${import.meta.env.VITE_API_BASE_URL}${cook.profileImage}`} alt={cook.name} className="w-full h-full object-cover" />
+              ) : (
+                initials
+              )}
             </div>
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-3 mb-2">

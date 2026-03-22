@@ -14,7 +14,9 @@ export default function CookDashboard() {
   
   const [formData, setFormData] = useState({});
   const [uploadFile, setUploadFile] = useState(null);
+  const [profilePhotoFile, setProfilePhotoFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [profileUploading, setProfileUploading] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
   
   const handleInputChange = (e) => {
@@ -83,6 +85,39 @@ export default function CookDashboard() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleProfilePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setProfileUploading(true);
+    const form = new FormData();
+    form.append('image', file);
+
+    try {
+      const uploadRes = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/cooks/upload`,
+        form,
+        { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } }
+      );
+      
+      const newImageUrl = uploadRes.data.imageUrl;
+      
+      await axios.put(
+        `${import.meta.env.VITE_API_BASE_URL}/cooks/profile/${profile._id}`,
+        { profileImage: newImageUrl },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      setProfile({ ...profile, profileImage: newImageUrl });
+      setMessage({ text: 'Profile photo updated!', type: 'success' });
+      setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+    } catch (err) {
+      setMessage({ text: err.response?.data?.message || 'Upload failed', type: 'error' });
+    } finally {
+      setProfileUploading(false);
     }
   };
 
@@ -201,6 +236,43 @@ export default function CookDashboard() {
               <span className="w-8 h-8 rounded-lg bg-[#F7F4EE] flex items-center justify-center text-sm font-sans">01</span>
               Profile Info
             </h2>
+
+            {/* Profile Photo Upload */}
+            <div className="mb-10 flex flex-col sm:flex-row items-center gap-6 p-6 bg-[#F7F4EE]/30 rounded-3xl border border-[#E5E0D8]">
+              <div className="relative group">
+                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md bg-white flex items-center justify-center text-3xl font-serif text-[#1A6B4A]">
+                  {profile.profileImage ? (
+                    <img src={`${import.meta.env.VITE_API_BASE_URL}${profile.profileImage}`} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    profile.name?.charAt(0).toUpperCase() || 'C'
+                  )}
+                </div>
+                {profileUploading && (
+                  <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <h4 className="text-sm font-bold text-[#1A1917] mb-1">Your Profile Photo</h4>
+                <p className="text-xs text-[#6E6C67] mb-4">This photo will be displayed on your card and profile page.</p>
+                <input
+                  type="file"
+                  id="profile-image-upload"
+                  onChange={handleProfilePhotoUpload}
+                  className="hidden"
+                  accept="image/*"
+                />
+                <label 
+                  htmlFor="profile-image-upload"
+                  className="inline-flex items-center px-4 py-2 bg-white border border-[#E5E0D8] rounded-xl text-xs font-bold text-[#1A1917] cursor-pointer hover:bg-gray-50 transition-all shadow-sm active:scale-95 gap-2"
+                >
+                  <Camera className="w-4 h-4 text-[#1A6B4A]" />
+                  {profile.profileImage ? 'Change Photo' : 'Upload Photo'}
+                </label>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               <div className="sm:col-span-2">
                 <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-3 block">Professional Name</label>

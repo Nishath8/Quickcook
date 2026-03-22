@@ -24,8 +24,13 @@ export default function AddCook() {
     sample_menu: '',
     availability: {
       "Mon": [], "Tue": [], "Wed": [], "Thu": [], "Fri": [], "Sat": [], "Sun": []
-    }
+    },
+    profileImage: ''
   });
+
+  const [profileFile, setProfileFile] = useState(null);
+  const [profilePreview, setProfilePreview] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [message, setMessage] = useState('');
@@ -51,6 +56,13 @@ export default function AddCook() {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileFile(file);
+      setProfilePreview(URL.createObjectURL(file));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,14 +70,32 @@ export default function AddCook() {
     setMessage('');
 
     try {
+      let profileImageUrl = '';
+      
+      // 1. Upload profile image first if selected
+      if (profileFile) {
+        const formDataUpload = new FormData();
+        formDataUpload.append('image', profileFile);
+        const uploadRes = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/cooks/upload`,
+          formDataUpload,
+          { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } }
+        );
+        profileImageUrl = uploadRes.data.imageUrl;
+      }
+
+      // 2. Submit cook data with profileImage
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/cooks`, 
-        formData,
+        { ...formData, profileImage: profileImageUrl },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      
       setStatus('success');
       setMessage(response.data.message || 'Cook added successfully!');
-      setFormData({ name: '', location: '', cuisine: '', price_range: '', contact: '' });
+      setFormData({ name: '', location: '', cuisine: '', price_range: '', contact: '', dietary_preferences: [], availability: { "Mon": [], "Tue": [], "Wed": [], "Thu": [], "Fri": [], "Sat": [], "Sun": [] }, profileImage: '' });
+      setProfileFile(null);
+      setProfilePreview(null);
     } catch (err) {
       setStatus('error');
       setMessage(err.response?.data?.message || 'Failed to add cook. Please try again.');
@@ -120,6 +150,24 @@ export default function AddCook() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6 bg-white p-10 rounded-3xl border border-[#E5E0D8] shadow-sm">
+            {/* Profile Photo Display/Picker */}
+            <div className="flex flex-col items-center mb-8 pb-8 border-b border-[#F7F4EE]">
+              <div className="relative mb-4">
+                <div className="w-24 h-24 rounded-full bg-[#F7F4EE] border-4 border-white shadow-md flex items-center justify-center overflow-hidden">
+                  {profilePreview ? (
+                    <img src={profilePreview} alt="Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <ChefHat className="w-10 h-10 text-[#A8A69F]" />
+                  )}
+                </div>
+                <label className="absolute bottom-0 right-0 bg-[#1A6B4A] p-2 rounded-full cursor-pointer shadow-lg hover:bg-[#2D8C60] transition-all">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/></svg>
+                  <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                </label>
+              </div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#6E6C67]">Add a Profile Photo (Recommended)</p>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="sm:col-span-2">
                 <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-2 block">Full Name</label>
