@@ -2,19 +2,27 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useGoogleLogin } from '@react-oauth/google';
 import { MapPin, Utensils, DollarSign, Phone, Star, ShieldCheck, ChevronLeft, Image as ImageIcon, Clock, PlusCircle } from 'lucide-react';
 import ReviewModal from '../components/ReviewModal';
 
 export default function CookProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, token } = useAuth();
+  const { user, login, token } = useAuth();
   
   const [cook, setCook] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
+  const gLogin = useGoogleLogin({
+    onSuccess: (codeResponse) => {
+      login({ access_token: codeResponse.access_token }).catch(err => alert(err.message));
+    },
+    onError: (error) => console.log('Login Failed:', error)
+  });
 
   useEffect(() => {
     fetchCookData();
@@ -120,7 +128,7 @@ export default function CookProfile() {
             </div>
             <button 
               onClick={() => {
-                if (!user) { navigate('/'); return; } 
+                if (!user) { gLogin(); return; } 
                 setIsReviewModalOpen(true);
               }}
               className="flex items-center justify-center bg-[#1A1917] hover:bg-black text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-md active:scale-95 gap-2"
