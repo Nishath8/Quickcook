@@ -164,7 +164,7 @@ export default function Admin() {
       </div>
 
       <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-[#E5E0D8]">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-[#E5E0D8]">
           <table className="min-w-full">
             <thead className="bg-[#F7F4EE]">
               <tr>

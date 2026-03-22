@@ -12,6 +12,7 @@ export default function ReviewModal({ cook, onClose }) {
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [writeMode, setWriteMode] = useState(false);
 
   useEffect(() => {
     fetchReviews();
@@ -50,6 +51,7 @@ export default function ReviewModal({ cook, onClose }) {
       );
       setComment('');
       setRating(5);
+      setWriteMode(false);
       fetchReviews();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit review');
@@ -77,23 +79,27 @@ export default function ReviewModal({ cook, onClose }) {
         </div>
 
         {/* Content (Scrollable) */}
-        <div className="flex-1 overflow-y-auto p-8 space-y-10 bg-white custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-8 space-y-10 bg-white custom-scrollbar relative">
           
-          {/* Write a Review Section */}
-          <div className="bg-[#F7F4EE] p-6 rounded-3xl border border-[#E5E0D8] shadow-sm">
-            <h3 className="text-base font-serif font-bold text-[#1A1917] mb-6 flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
-                <MessageSquare className="w-4 h-4 text-[#1A6B4A]" />
+          {/* Write Mode Overlay */}
+          {writeMode && (
+            <div className="absolute inset-0 bg-white/95 backdrop-blur-md z-[110] p-8 flex flex-col animate-in zoom-in-95 duration-300">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-2xl font-serif font-bold text-[#1A1917]">Your Experience</h3>
+                <button 
+                  onClick={() => setWriteMode(false)}
+                  className="p-2 text-[#A8A69F] hover:text-[#1A1917] rounded-full hover:bg-[#F7F4EE] transition-all"
+                >
+                  <X className="w-6 h-6" />
+                </button>
               </div>
-              Share Your Experience
-            </h3>
-            {user ? (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {error && <div className="p-4 text-xs font-bold text-[#7B3322] bg-[#FAECE7] rounded-xl border border-[#F2DDD7] animate-pulse">{error}</div>}
+
+              <form onSubmit={handleSubmit} className="space-y-8 flex-1">
+                {error && <div className="p-4 text-xs font-bold text-[#7B3322] bg-[#FAECE7] rounded-xl border border-[#F2DDD7]">{error}</div>}
                 
-                <div className="bg-white p-4 rounded-xl border border-[#E5E0D8]">
-                  <label className="block text-[10px] font-bold uppercase tracking-widest text-[#A8A69F] mb-3">Your Rating</label>
-                  <div className="flex space-x-3">
+                <div className="bg-[#F7F4EE] p-6 rounded-2xl border border-[#E5E0D8]">
+                  <label className="block text-[11px] font-bold uppercase tracking-widest text-[#A8A69F] mb-4">Rating</label>
+                  <div className="flex space-x-4">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
                         key={star}
@@ -101,46 +107,50 @@ export default function ReviewModal({ cook, onClose }) {
                         onClick={() => setRating(star)}
                         className="focus:outline-none transition-all hover:scale-125 active:scale-90"
                       >
-                        <Star className={`w-8 h-8 ${rating >= star ? 'text-[#C17B2A] fill-current' : 'text-[#E5E0D8]'}`} />
+                        <Star className={`w-10 h-10 ${rating >= star ? 'text-[#C17B2A] fill-current' : 'text-[#D1D0CB]'}`} />
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-widest text-[#A8A69F] mb-2 px-1">Detailed Feedback</label>
+                <div className="flex-1 flex flex-col">
+                  <label className="block text-[11px] font-bold uppercase tracking-widest text-[#A8A69F] mb-3 px-1">Describe your meal</label>
                   <textarea
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    rows={3}
-                    className="w-full rounded-2xl border-[#E5E0D8] focus:border-[#1A6B4A] focus:ring-1 focus:ring-[#1A6B4A] outline-none transition-all p-4 text-sm bg-white placeholder-[#A8A69F]"
-                    placeholder="Describe the flavors, punctuality, and service..."
+                    className="flex-1 w-full rounded-2xl border-2 border-[#F7F4EE] focus:border-[#1A6B4A] outline-none transition-all p-6 text-lg bg-[#F7F4EE]/30 placeholder-[#A8A69F] resize-none"
+                    placeholder="Was the spices right? How was the service?"
                     required
                   />
                 </div>
 
-                <div className="flex justify-end">
+                <div className="pt-4">
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="bg-[#1A6B4A] hover:bg-[#2D8C60] text-white px-8 py-3 rounded-xl font-bold text-sm shadow-md transition-all active:scale-95 disabled:opacity-50"
+                    className="w-full bg-[#1A6B4A] hover:bg-[#2D8C60] text-white py-5 rounded-2xl font-bold text-lg shadow-xl shadow-green-100 transition-all active:scale-[0.98] disabled:opacity-50"
                   >
-                    {submitting ? 'Publishing...' : 'Submit Review'}
+                    {submitting ? 'Publishing your review...' : 'Share Review'}
                   </button>
                 </div>
               </form>
+            </div>
+          )}
+
+          {/* Review List Header / Write Trigger */}
+          <div className="flex items-center justify-between pb-6 border-b border-[#F7F4EE]">
+            <h3 className="text-2xl font-serif font-bold text-[#1A1917]">Voice of Clients <span className="text-[#A8A69F] font-normal text-base ml-2">({reviews.length})</span></h3>
+            {user ? (
+              <button 
+                onClick={() => setWriteMode(true)}
+                className="bg-[#1A1917] hover:bg-black text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md transition-all active:scale-95 flex items-center gap-2"
+              >
+                <PlusCircle className="w-4 h-4" /> Write a Review
+              </button>
             ) : (
-              <div className="text-center py-10 bg-white rounded-2xl border-2 border-dashed border-[#E5E0D8]">
-                <p className="text-[#6E6C67] text-sm font-light">Please sign in with Google to leave a review!</p>
-              </div>
+              <p className="text-[#A8A69F] text-xs font-medium italic">Sign in to leave a review</p>
             )}
           </div>
-
-          {/* Reviews List Section */}
-          <div>
-            <div className="flex items-center justify-between mb-8 px-1">
-              <h3 className="text-xl font-serif font-bold text-[#1A1917]">Voice of Clients <span className="text-[#A8A69F] font-normal text-base ml-2">({reviews.length})</span></h3>
-            </div>
             
             {loading ? (
               <div className="space-y-4">
@@ -198,7 +208,6 @@ export default function ReviewModal({ cook, onClose }) {
             )}
           </div>
 
-        </div>
       </div>
     </div>
   );
