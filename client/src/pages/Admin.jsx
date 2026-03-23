@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import * as XLSX from 'xlsx';
 
 export default function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -24,8 +25,9 @@ export default function Admin() {
 
   // Bulk Upload State
   const [showBulkUpload, setShowBulkUpload] = useState(false);
-  const [bulkData, setBulkData] = useState('');
+  const [bulkData, setBulkData] = useState([]); // Now an array of objects
   const [uploadLoading, setUploadLoading] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -126,32 +128,71 @@ export default function Admin() {
   };
 
   const handleBulkUpload = async () => {
+    if (bulkData.length === 0) return;
+    
     try {
-      const parsedData = JSON.parse(bulkData);
-      const cooksArray = Array.isArray(parsedData) ? parsedData : [parsedData];
-      
       setUploadLoading(true);
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/bulk-upload`, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // if auth is enabled
-        },
-        body: JSON.stringify({ cooks: cooksArray }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cooks: bulkData }),
       });
 
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Bulk upload failed');
 
       alert(result.message);
-      setBulkData('');
+      setBulkData([]);
       setShowBulkUpload(false);
       fetchCooks();
     } catch (err) {
-      alert(err.message || 'Invalid JSON format. Please check your input.');
+      alert(err.message || 'Bulk upload failed. Please check your data.');
     } finally {
       setUploadLoading(false);
     }
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const json = XLSX.utils.sheet_to_json(worksheet);
+
+        // Map alternate headers to schema fields
+        const mappedData = json.map(row => {
+          const findVal = (keys) => {
+            const key = Object.keys(row).find(k => keys.includes(k.trim().toLowerCase()));
+            return key ? row[key] : undefined;
+          };
+
+          return {
+            name: findVal(['name', 'full name', 'cook name', 'provider']),
+            location: findVal(['location', 'area', 'city', 'locality']),
+            cuisine: findVal(['cuisine', 'specialty', 'type', 'food']),
+            contact: findVal(['contact', 'phone', 'whatsapp', 'mobile']),
+            price_range: findVal(['price', 'rate', 'price range', 'budget']),
+            dietary_preferences: findVal(['dietary', 'veg/non-veg', 'pref']) ? [findVal(['dietary', 'veg/non-veg', 'pref'])] : ['Veg']
+          };
+        }).filter(item => item.name && item.location && item.cuisine);
+
+        if (mappedData.length === 0) {
+          alert("Could not find any valid cook data. Please ensure headers like 'Name', 'Location', and 'Cuisine' exist.");
+        } else {
+          setBulkData(mappedData);
+          alert(`Success! Parsed ${mappedData.length} records. Please review the preview below before confirming.`);
+        }
+      } catch (err) {
+        alert("Failed to parse file: " + err.message);
+      }
+    };
+    reader.readAsArrayBuffer(file);
   };
 
   const copyTemplate = () => {
@@ -234,46 +275,99 @@ export default function Admin() {
 
       {showBulkUpload && (
         <div className="mb-10 p-8 bg-white rounded-[24px] border border-[#E5E0D8] shadow-sm animate-fade-in-up">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-start mb-10 pb-6 border-b border-[#F7F4EE]">
             <div>
-              <h3 className="text-xl font-serif font-bold text-[#1A1917]">Bulk Upload Cooks</h3>
-              <p className="text-sm text-[#A8A69F]">Paste a JSON array of cook profiles to import them instantly.</p>
+              <h3 className="text-2xl font-serif font-bold text-[#1A1917]">Bulk Data Import</h3>
+              <p className="text-[#6E6C67] mt-1 max-w-lg">Upload an Excel or CSV file. We'll automatically detect headers like <strong>Name, Location, Cuisine, and Contact</strong>.</p>
             </div>
+            
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleFileUpload} 
+              accept=".xlsx,.xls,.csv" 
+              className="hidden" 
+            />
+            
             <button 
-              onClick={copyTemplate}
-              className="text-xs font-bold text-[#1A6B4A] hover:underline"
+              onClick={() => fileInputRef.current.click()}
+              className="px-6 py-3 bg-[#F7F4EE] hover:bg-[#E5E0D8] text-[#1A1917] font-bold rounded-xl transition-all flex items-center gap-3 border border-[#E5E0D8]"
             >
-              + Copy JSON Template
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/></svg>
+              Select Excel/CSV File
             </button>
           </div>
-          
-          <textarea
-            value={bulkData}
-            onChange={(e) => setBulkData(e.target.value)}
-            className="w-full h-64 p-4 font-mono text-xs bg-[#F7F4EE] border border-[#E5E0D8] rounded-xl focus:ring-1 focus:ring-[#1A6B4A] outline-none mb-6 resize-none"
-            placeholder='[{"name": "...", "location": "...", "cuisine": "..."}]'
-          />
-          
-          <div className="flex justify-end gap-3">
-            <button
-              onClick={() => setShowBulkUpload(false)}
-              className="px-6 py-2.5 text-sm font-bold text-[#6E6C67] hover:bg-[#F7F4EE] rounded-xl transition-all"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleBulkUpload}
-              disabled={uploadLoading || !bulkData.trim()}
-              className="px-8 py-2.5 bg-[#1A1917] text-white text-sm font-bold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2"
-            >
-              {uploadLoading ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>
-              )}
-              {uploadLoading ? 'Uploading...' : 'Confirm Bulk Upload'}
-            </button>
-          </div>
+
+          {bulkData.length > 0 ? (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-sm font-bold text-[#1A6B4A] bg-[#E4F2EA] px-4 py-1.5 rounded-full">
+                  Preview: {bulkData.length} cooks ready
+                </span>
+                <button 
+                  onClick={() => setBulkData([])}
+                  className="text-xs font-bold text-[#7B3322] hover:underline"
+                >
+                  Clear Selection
+                </button>
+              </div>
+              
+              <div className="border border-[#E5E0D8] rounded-xl overflow-hidden mb-8 max-h-60 overflow-y-auto bg-[#FDFCFB]">
+                <table className="min-w-full text-xs">
+                  <thead className="bg-[#F7F4EE] sticky top-0">
+                    <tr>
+                      <th className="px-4 py-3 text-left font-bold text-[#6E6C67]">Name</th>
+                      <th className="px-4 py-3 text-left font-bold text-[#6E6C67]">Location</th>
+                      <th className="px-4 py-3 text-left font-bold text-[#6E6C67]">Cuisine</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#F7F4EE]">
+                    {bulkData.slice(0, 50).map((c, i) => (
+                      <tr key={i}>
+                        <td className="px-4 py-2.5 font-bold text-[#1A1917]">{c.name}</td>
+                        <td className="px-4 py-2.5 text-[#6E6C67]">{c.location}</td>
+                        <td className="px-4 py-2.5 text-[#6E6C67]">{c.cuisine}</td>
+                      </tr>
+                    ))}
+                    {bulkData.length > 50 && (
+                      <tr className="bg-[#F7F4EE]/30">
+                        <td colSpan="3" className="px-4 py-2.5 text-center text-[#A8A69F] italic font-medium">...and {bulkData.length - 50} more records</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setShowBulkUpload(false)}
+                  className="px-8 py-3 text-sm font-bold text-[#6E6C67] hover:bg-[#F7F4EE] rounded-xl transition-all"
+                >
+                  Discard
+                </button>
+                <button
+                  onClick={handleBulkUpload}
+                  disabled={uploadLoading}
+                  className="px-10 py-3 bg-[#1A1917] text-white text-sm font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all active:scale-95 flex items-center gap-3"
+                >
+                  {uploadLoading ? (
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>
+                  )}
+                  {uploadLoading ? 'Processing...' : 'Approve & Import Now'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="py-12 border-2 border-dashed border-[#E5E0D8] rounded-2xl flex flex-col items-center justify-center bg-[#FDFCFB]">
+              <div className="w-12 h-12 bg-[#F7F4EE] rounded-full flex items-center justify-center text-[#A8A69F] mb-4">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17v-2a2 2 0 00-2-2H5a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2zm0 0h2a2 2 0 002-2M9 17v-2m6 10v-2a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2zm0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              </div>
+              <p className="text-sm font-bold text-[#1A1917]">No file selected</p>
+              <p className="text-xs text-[#A8A69F] mt-1">Upload an XLSX or CSV to get started</p>
+            </div>
+          )}
         </div>
       )}
 
