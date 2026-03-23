@@ -242,7 +242,7 @@ export default function CookDashboard() {
               <div className="relative group">
                 <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md bg-white flex items-center justify-center text-3xl font-serif text-[#1A6B4A]">
                   {profile.profileImage ? (
-                    <img src={`${import.meta.env.VITE_API_BASE_URL}${profile.profileImage}`} alt="Profile" className="w-full h-full object-cover" />
+                    <img src={getImageUrl(profile.profileImage)} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
                     profile.name?.charAt(0).toUpperCase() || 'C'
                   )}

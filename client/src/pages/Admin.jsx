@@ -4,6 +4,14 @@ export default function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem('adminAuth') === 'true';
   });
+
+  const getImageUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    return `${baseUrl}${cleanPath}`;
+  };
   const [password, setPassword] = useState('');
 
   const [cooks, setCooks] = useState([]);
@@ -182,7 +190,7 @@ export default function Admin() {
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full overflow-hidden bg-[#F7F4EE] border border-[#E5E0D8] shrink-0">
                         {cook.profileImage ? (
-                          <img src={`${import.meta.env.VITE_API_BASE_URL}${cook.profileImage}`} alt="" className="w-full h-full object-cover" />
+                          <img src={getImageUrl(cook.profileImage)} alt="" className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-xs font-bold text-[#A8A69F]">{cook.name?.charAt(0)}</div>
                         )}
