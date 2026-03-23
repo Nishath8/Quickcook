@@ -474,7 +474,7 @@ export default function CookDashboard() {
                 {profile.images && profile.images.length > 0 ? profile.images.map((img, i) => (
                   <div key={i} className="aspect-square rounded-2xl border border-[#E5E0D8] overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow group relative">
                     <img 
-                      src={`${import.meta.env.VITE_API_BASE_URL}${img}`} 
+                      src={getImageUrl(img)} 
                       alt={`Food ${i}`} 
                       className="w-full h-full object-cover transition-transform group-hover:scale-110" 
                     />
