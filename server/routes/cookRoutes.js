@@ -29,7 +29,8 @@ router.get('/cooks/:id', getCookById);
 router.put('/cooks/profile/:id', authMiddleware, updateOwnProfile);
 router.post('/cooks/upload', authMiddleware, upload.single('image'), (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
-  const imageUrl = `/uploads/${req.file.filename}`;
+  // multer-storage-cloudinary provides the full URL in req.file.path
+  const imageUrl = req.file.path;
   res.json({ imageUrl });
 });
 
