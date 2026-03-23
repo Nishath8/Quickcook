@@ -242,6 +242,35 @@ const assignUserToCook = async (req, res) => {
   }
 };
 
+// POST /admin/bulk-upload
+const bulkUploadCooks = async (req, res) => {
+  try {
+    const { cooks } = req.body;
+    if (!Array.isArray(cooks)) return res.status(400).json({ message: 'Input must be an array of cooks' });
+    
+    // Validate each cook minimally before insert
+    const validCooks = cooks
+      .filter(c => c.name && c.location && c.cuisine)
+      .map(c => ({
+        ...c,
+        status: 'approved', // Bulk uploads by admin are auto-approved
+        created_at: new Date()
+      }));
+
+    if (validCooks.length === 0) {
+      return res.status(400).json({ message: 'No valid cook profiles found in the provided data.' });
+    }
+
+    const result = await Cook.insertMany(validCooks);
+    res.status(201).json({ 
+      message: `Successfully uploaded ${result.length} cooks!`,
+      count: result.length 
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createCook,
   getApprovedCooks,
@@ -251,5 +280,6 @@ module.exports = {
   updateCookDetails,
   updateOwnProfile,
   deleteCook,
-  assignUserToCook
+  assignUserToCook,
+  bulkUploadCooks
 };

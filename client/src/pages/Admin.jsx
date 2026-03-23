@@ -22,6 +22,11 @@ export default function Admin() {
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
 
+  // Bulk Upload State
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
+  const [bulkData, setBulkData] = useState('');
+  const [uploadLoading, setUploadLoading] = useState(false);
+
   useEffect(() => {
     if (isLoggedIn) {
       fetchCooks();
@@ -120,6 +125,53 @@ export default function Admin() {
     }
   };
 
+  const handleBulkUpload = async () => {
+    try {
+      const parsedData = JSON.parse(bulkData);
+      const cooksArray = Array.isArray(parsedData) ? parsedData : [parsedData];
+      
+      setUploadLoading(true);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/bulk-upload`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // if auth is enabled
+        },
+        body: JSON.stringify({ cooks: cooksArray }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || 'Bulk upload failed');
+
+      alert(result.message);
+      setBulkData('');
+      setShowBulkUpload(false);
+      fetchCooks();
+    } catch (err) {
+      alert(err.message || 'Invalid JSON format. Please check your input.');
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
+  const copyTemplate = () => {
+    const template = [
+      {
+        "name": "Meera Krishnan",
+        "location": "Indiranagar",
+        "cuisine": "South Indian",
+        "price_range": "₹250 - ₹500",
+        "contact": "+91 9876543210",
+        "dietary_preferences": ["Veg"],
+        "availability": {
+          "Mon": ["Morning", "Afternoon"],
+          "Tue": ["Afternoon"]
+        }
+      }
+    ];
+    setBulkData(JSON.stringify(template, null, 2));
+  };
+
   if (!isLoggedIn) {
     return (
       <div className="max-w-md mx-auto py-20 px-4">
@@ -160,16 +212,70 @@ export default function Admin() {
           <h1 className="text-4xl font-serif font-bold text-[#1A1917]">Moderation Table</h1>
           <p className="text-[#6E6C67] mt-2">Manage cook applications and profile verification status.</p>
         </div>
-        <button
-          onClick={() => {
-            localStorage.removeItem('adminAuth');
-            setIsLoggedIn(false);
-          }}
-          className="text-sm px-6 py-2.5 hover:bg-[#F7F4EE] text-[#1A1917] font-semibold rounded-xl transition-all border border-[#E5E0D8] shadow-sm active:scale-95"
-        >
-          Logout Admin
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowBulkUpload(!showBulkUpload)}
+            className="text-sm px-6 py-2.5 bg-[#1A6B4A] hover:bg-[#2D8C60] text-white font-semibold rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            Bulk Upload
+          </button>
+          <button
+            onClick={() => {
+              localStorage.removeItem('adminAuth');
+              setIsLoggedIn(false);
+            }}
+            className="text-sm px-6 py-2.5 hover:bg-[#FAECE7] text-[#7B3322] font-semibold rounded-xl transition-all border border-[#F2DDD7] bg-white shadow-sm active:scale-95"
+          >
+            Logout Admin
+          </button>
+        </div>
       </div>
+
+      {showBulkUpload && (
+        <div className="mb-10 p-8 bg-white rounded-[24px] border border-[#E5E0D8] shadow-sm animate-fade-in-up">
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h3 className="text-xl font-serif font-bold text-[#1A1917]">Bulk Upload Cooks</h3>
+              <p className="text-sm text-[#A8A69F]">Paste a JSON array of cook profiles to import them instantly.</p>
+            </div>
+            <button 
+              onClick={copyTemplate}
+              className="text-xs font-bold text-[#1A6B4A] hover:underline"
+            >
+              + Copy JSON Template
+            </button>
+          </div>
+          
+          <textarea
+            value={bulkData}
+            onChange={(e) => setBulkData(e.target.value)}
+            className="w-full h-64 p-4 font-mono text-xs bg-[#F7F4EE] border border-[#E5E0D8] rounded-xl focus:ring-1 focus:ring-[#1A6B4A] outline-none mb-6 resize-none"
+            placeholder='[{"name": "...", "location": "...", "cuisine": "..."}]'
+          />
+          
+          <div className="flex justify-end gap-3">
+            <button
+              onClick={() => setShowBulkUpload(false)}
+              className="px-6 py-2.5 text-sm font-bold text-[#6E6C67] hover:bg-[#F7F4EE] rounded-xl transition-all"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleBulkUpload}
+              disabled={uploadLoading || !bulkData.trim()}
+              className="px-8 py-2.5 bg-[#1A1917] text-white text-sm font-bold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2"
+            >
+              {uploadLoading ? (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>
+              )}
+              {uploadLoading ? 'Uploading...' : 'Confirm Bulk Upload'}
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-[#E5E0D8]">
         <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-[#E5E0D8]">

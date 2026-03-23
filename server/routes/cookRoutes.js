@@ -41,4 +41,6 @@ router.put('/admin/cooks/:id', updateCookDetails);
 router.delete('/admin/cooks/:id', deleteCook);
 router.post('/admin/cooks/:id/assign', assignUserToCook);
 
+router.post('/admin/bulk-upload', authMiddleware, cookController.bulkUploadCooks);
+
 module.exports = router;
