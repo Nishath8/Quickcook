@@ -46,6 +46,15 @@ export default function CookCard({ cook }) {
     onError: (error) => console.log('Login Failed:', error)
   });
 
+  const getImageUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    // Ensure VITE_API_BASE_URL ends with slash or path starts without it
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    return `${baseUrl}${cleanPath}`;
+  };
+
   return (
     <div className="cook-card overflow-hidden relative group bg-white border border-[#E5E0D8] rounded-[24px] transition-all hover:shadow-xl hover:translate-y-[-4px]">
       {isContacted && (
@@ -67,7 +76,7 @@ export default function CookCard({ cook }) {
         <div className="flex items-center gap-5 mb-6">
           <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-sm shrink-0 bg-[#F7F4EE] flex items-center justify-center text-xl font-medium text-[#1A6B4A]">
             {cook.profileImage ? (
-              <img src={`${import.meta.env.VITE_API_BASE_URL}${cook.profileImage}`} alt={cook.name} className="w-full h-full object-cover" />
+              <img src={getImageUrl(cook.profileImage)} alt={cook.name} className="w-full h-full object-cover" />
             ) : (
               initials
             )}
@@ -90,7 +99,7 @@ export default function CookCard({ cook }) {
                 cook.vouchers.map((voucher, i) => (
                   <div key={i} className="w-7 h-7 rounded-full border-2 border-[#E4F2EA] bg-[#1A6B4A] overflow-hidden flex items-center justify-center">
                     {voucher.avatar ? (
-                      <img src={voucher.avatar} alt={voucher.name} className="w-full h-full object-cover" />
+                      <img src={getImageUrl(voucher.avatar)} alt={voucher.name} className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-white text-[10px] font-bold">{voucher.name?.[0]}</span>
                     )}
