@@ -11,7 +11,6 @@ export default function Admin() {
     const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
     return `${baseUrl}${cleanPath}`;
-  };
   const [password, setPassword] = useState('');
 
   const [cooks, setCooks] = useState([]);
