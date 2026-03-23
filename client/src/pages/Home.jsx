@@ -71,7 +71,7 @@ export default function Home() {
             Every cook on Quickcook is verified by real past clients and background-checked — so you get a trusted home cook, not a stranger from the internet.
           </p>
           <div className="hero-cta">
-            <button className="btn-primary" onClick={() => window.scrollTo(0, document.getElementById('cooks').offsetTop)}>
+            <button className="btn-primary" onClick={() => document.getElementById('cooks').scrollIntoView({ behavior: 'smooth' })}>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="white" strokeWidth="1.5"/><path d="M11 11l3 3" stroke="white" strokeWidth="1.5" strokeLinecap="round"/></svg>
               Find a cook near you
             </button>
@@ -321,7 +321,7 @@ export default function Home() {
         <h2 className="cta-h2">Ready for home-cooked food<br/>you can <em>actually trust?</em></h2>
         <p className="cta-sub">Join Quickcook — find a verified cook in your neighbourhood today.</p>
         <div className="cta-btns">
-          <button className="btn-cta-p" onClick={() => window.scrollTo(0, document.getElementById('cooks').offsetTop)}>Find a cook near me</button>
+          <button className="btn-cta-p" onClick={() => document.getElementById('cooks').scrollIntoView({ behavior: 'smooth' })}>Find a cook near me</button>
           <Link to="/add" className="btn-cta-s">List your cooking services</Link>
         </div>
       </div>
