@@ -94,21 +94,32 @@ export default function Layout() {
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-white z-[150] md:hidden animate-in fade-in slide-in-from-right duration-300">
-          <div className="flex flex-col h-full bg-[#FDFCFB]">
-            <div className="flex items-center justify-between p-6 bg-white border-b border-[#E5E0D8]">
+        <div className="fixed inset-0 z-[150] md:hidden">
+          {/* Backdrop Blur Overlay */}
+          <div 
+            className="absolute inset-0 bg-[#1A1917]/20 backdrop-blur-sm animate-in fade-in duration-500"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          
+          <div className="absolute right-0 top-0 bottom-0 w-[85%] max-w-[400px] bg-gradient-to-br from-[#FCFBF9] to-[#F7F4EE] shadow-2xl animate-in slide-in-from-right duration-500 ease-out flex flex-col">
+            <div className="flex items-center justify-between p-6 bg-white/80 backdrop-blur-md border-b border-[#E5E0D8]/50">
                <Link className="nav-logo" to="/" onClick={() => setMobileMenuOpen(false)}>
-                <div className="nav-logo-mark">
+                <div className="nav-logo-mark scale-90">
                   <svg viewBox="0 0 18 18" fill="none"><path d="M9 2C6.24 2 4 4.24 4 7c0 2 1.2 3.73 2.93 4.55L6 15h6l-.93-3.45A5 5 0 0 0 14 7c0-2.76-2.24-5-5-5z" stroke="white" strokeWidth="1.3" strokeLinejoin="round"/><path d="M7 15h4" stroke="white" strokeWidth="1.3" strokeLinecap="round"/></svg>
                 </div>
-                <span className="font-serif">Quickcook</span>
+                <span className="font-serif text-xl tracking-tight">Quickcook</span>
               </Link>
-              <button onClick={() => setMobileMenuOpen(false)} className="p-2 bg-[#F7F4EE] rounded-full"><X className="w-6 h-6 text-[#1A1917]" /></button>
+              <button 
+                onClick={() => setMobileMenuOpen(false)} 
+                className="p-2.5 bg-[#F7F4EE] hover:bg-[#E5E0D8] rounded-full transition-colors active:scale-90"
+              >
+                <X className="w-5 h-5 text-[#1A1917]" />
+              </button>
             </div>
             
-            <div className="flex flex-col p-6 space-y-3 overflow-y-auto">
+            <div className="flex-1 flex flex-col p-6 space-y-3 overflow-y-auto">
               <Link 
-                className={`flex items-center gap-4 text-lg font-bold p-5 rounded-[24px] transition-all transform animate-in fade-in slide-in-from-bottom-4 duration-500 delay-[100ms] ${location.pathname === '/' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
+                className={`flex items-center gap-4 text-base font-bold p-4.5 rounded-[20px] transition-all transform animate-in fade-in slide-in-from-bottom-6 duration-700 delay-[100ms] ${location.pathname === '/' ? 'bg-[#1A1917] text-white shadow-xl translate-x-2' : 'text-[#1A1917] hover:bg-white/60 hover:translate-x-1 border border-transparent hover:border-[#E5E0D8]/30'}`}
                 to="/" 
                 onClick={() => setMobileMenuOpen(false)}
                 style={{ fontFamily: 'var(--sans)' }}
@@ -118,7 +129,7 @@ export default function Layout() {
               </Link>
 
               <Link 
-                className={`flex items-center gap-4 text-lg font-bold p-5 rounded-[24px] transition-all transform animate-in fade-in slide-in-from-bottom-4 duration-500 delay-[150ms] ${location.pathname === '/add' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
+                className={`flex items-center gap-4 text-base font-bold p-4.5 rounded-[20px] transition-all transform animate-in fade-in slide-in-from-bottom-6 duration-700 delay-[150ms] ${location.pathname === '/add' ? 'bg-[#1A1917] text-white shadow-xl translate-x-2' : 'text-[#1A1917] hover:bg-white/60 hover:translate-x-1 border border-transparent hover:border-[#E5E0D8]/30'}`}
                 to="/add" 
                 onClick={() => setMobileMenuOpen(false)}
                 style={{ fontFamily: 'var(--sans)' }}
@@ -129,7 +140,7 @@ export default function Layout() {
 
               {user && (
                 <Link 
-                  className={`flex items-center gap-4 text-lg font-bold p-5 rounded-[24px] transition-all transform animate-in fade-in slide-in-from-bottom-4 duration-500 delay-[200ms] ${location.pathname === '/dashboard' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
+                  className={`flex items-center gap-4 text-base font-bold p-4.5 rounded-[20px] transition-all transform animate-in fade-in slide-in-from-bottom-6 duration-700 delay-[200ms] ${location.pathname === '/dashboard' ? 'bg-[#1A1917] text-white shadow-xl translate-x-2' : 'text-[#1A1917] hover:bg-white/60 hover:translate-x-1 border border-transparent hover:border-[#E5E0D8]/30'}`}
                   to="/dashboard" 
                   onClick={() => setMobileMenuOpen(false)}
                   style={{ fontFamily: 'var(--sans)' }}
@@ -140,7 +151,7 @@ export default function Layout() {
               )}
 
               <Link 
-                className={`flex items-center gap-4 text-lg font-bold p-5 rounded-[24px] transition-all transform animate-in fade-in slide-in-from-bottom-4 duration-500 delay-[250ms] ${location.pathname === '/admin' ? 'bg-[#1A1917] text-white shadow-lg' : 'text-[#1A1917] hover:bg-[#F7F4EE]'}`}
+                className={`flex items-center gap-4 text-base font-bold p-4.5 rounded-[20px] transition-all transform animate-in fade-in slide-in-from-bottom-6 duration-700 delay-[250ms] ${location.pathname === '/admin' ? 'bg-[#1A1917] text-white shadow-xl translate-x-2' : 'text-[#1A1917] hover:bg-white/60 hover:translate-x-1 border border-transparent hover:border-[#E5E0D8]/30'}`}
                 to="/admin" 
                 onClick={() => setMobileMenuOpen(false)}
                 style={{ fontFamily: 'var(--sans)' }}
@@ -149,14 +160,14 @@ export default function Layout() {
                 Admin Panel
               </Link>
               
-              <div className="pt-6 mt-6 border-t border-[#E5E0D8] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-[300ms]">
+              <div className="pt-6 mt-auto border-t border-[#E5E0D8]/40 p-6 bg-white/30 backdrop-blur-sm">
                 {!user ? (
                   <button 
                     onClick={() => { gLogin(); setMobileMenuOpen(false); }}
-                    className="w-full bg-[#1A1917] text-white p-5 rounded-[24px] font-bold flex items-center justify-center gap-3 shadow-xl active:scale-95 transition-all"
+                    className="w-full bg-[#1A1917] text-white p-4.5 rounded-[20px] font-bold flex items-center justify-center gap-3 shadow-xl active:scale-95 transition-all hover:bg-[#2D2C28] animate-in fade-in slide-in-from-bottom-6 duration-700 delay-[350ms]"
                     style={{ fontFamily: 'var(--sans)' }}
                   >
-                    <div className="bg-white p-1.5 rounded-full flex items-center justify-center shadow-sm">
+                    <div className="bg-white p-1 rounded-full flex items-center justify-center shadow-sm">
                       <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
                     </div>
                     Sign in with Google
@@ -164,7 +175,7 @@ export default function Layout() {
                 ) : (
                   <button 
                     onClick={() => { logout(); setMobileMenuOpen(false); }}
-                    className="w-full flex items-center justify-center gap-3 text-[#7B3322] font-bold p-5 rounded-[24px] hover:bg-[#FAECE7] transition-all"
+                    className="w-full flex items-center justify-center gap-3 text-[#7B3322] font-bold p-4.5 rounded-[20px] hover:bg-[#FAECE7] transition-all animate-in fade-in slide-in-from-bottom-6 duration-700 delay-[350ms]"
                     style={{ fontFamily: 'var(--sans)' }}
                   >
                     <LogOut className="w-5 h-5" /> Sign Out
