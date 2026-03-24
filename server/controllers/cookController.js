@@ -28,7 +28,7 @@ const createCook = async (req, res) => {
       submissionTracker.set(ip, [now]);
     }
 
-    let { name, location, cuisine, price_range, contact, dietary_preferences, availability, sample_menu } = req.body;
+    let { name, location, cuisine, price_range, contact, dietary_preferences, availability, sample_menu, profileImage, images } = req.body;
 
     if (!name || !location || !cuisine) {
       return res.status(400).json({ message: 'Name, location, and cuisine are required.' });
@@ -78,6 +78,8 @@ const createCook = async (req, res) => {
       dietary_preferences: dietary_preferences || ['Veg'],
       availability: availability || {},
       sample_menu: sample_menu || '',
+      profileImage: profileImage || '',
+      images: images || [],
       status: 'pending',
       userId: req.user?.userId || null 
     });

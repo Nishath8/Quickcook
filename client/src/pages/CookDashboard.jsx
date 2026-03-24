@@ -182,6 +182,45 @@ export default function CookDashboard() {
     }
   };
 
+  const handleDeleteImage = async (urlToDelete) => {
+    if (!window.confirm('Are you sure you want to remove this masterpiece from your gallery?')) return;
+    
+    const updatedImages = profile.images.filter(url => url !== urlToDelete);
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_API_BASE_URL}/cooks/profile/${profile._id}`,
+        { images: updatedImages },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setProfile({ ...profile, images: updatedImages });
+      setMessage({ text: 'Image removed from gallery', type: 'success' });
+    } catch (err) {
+      setMessage({ text: 'Failed to delete image', type: 'error' });
+    }
+  };
+
+  const handleMoveImage = async (index, direction) => {
+    const newImages = [...profile.images];
+    if (direction === 'left' && index > 0) {
+      [newImages[index], newImages[index - 1]] = [newImages[index - 1], newImages[index]];
+    } else if (direction === 'right' && index < newImages.length - 1) {
+      [newImages[index], newImages[index + 1]] = [newImages[index + 1], newImages[index]];
+    } else {
+      return;
+    }
+
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_API_BASE_URL}/cooks/profile/${profile._id}`,
+        { images: newImages },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setProfile({ ...profile, images: newImages });
+    } catch (err) {
+      setMessage({ text: 'Failed to reorder images', type: 'error' });
+    }
+  };
+
   if (loading) return <div className="p-20 text-center animate-pulse">Loading dashboard...</div>;
 
   if (!profile) {
@@ -478,7 +517,40 @@ export default function CookDashboard() {
                       alt={`Food ${i}`} 
                       className="w-full h-full object-cover transition-transform group-hover:scale-110" 
                     />
-                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all flex flex-col justify-between p-2">
+                      <div className="flex justify-end">
+                        <button 
+                          onClick={() => handleDeleteImage(img)}
+                          className="p-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors shadow-lg"
+                          title="Remove Image"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </button>
+                      </div>
+                      
+                      <div className="flex justify-center gap-2">
+                        {i > 0 && (
+                          <button 
+                            onClick={() => handleMoveImage(i, 'left')}
+                            className="p-1.5 bg-white/20 text-white rounded-lg hover:bg-white/40 backdrop-blur-md transition-colors"
+                            title="Move Earlier"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
+                          </button>
+                        )}
+                        {i < profile.images.length - 1 && (
+                          <button 
+                            onClick={() => handleMoveImage(i, 'right')}
+                            className="p-1.5 bg-white/20 text-white rounded-lg hover:bg-white/40 backdrop-blur-md transition-colors"
+                            title="Move Later"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )) : (
                   <div className="col-span-2 py-10 text-center border-2 border-dashed border-[#E5E0D8] rounded-2xl">

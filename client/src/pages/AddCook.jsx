@@ -25,11 +25,14 @@ export default function AddCook() {
     availability: {
       "Mon": [], "Tue": [], "Wed": [], "Thu": [], "Fri": [], "Sat": [], "Sun": []
     },
-    profileImage: ''
+    profileImage: '',
+    images: []
   });
 
   const [profileFile, setProfileFile] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
+  const [galleryFiles, setGalleryFiles] = useState([]);
+  const [galleryPreviews, setGalleryPreviews] = useState([]);
   const [uploading, setUploading] = useState(false);
 
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
@@ -64,6 +67,18 @@ export default function AddCook() {
     }
   };
 
+  const handleGalleryChange = (e) => {
+    const files = Array.from(e.target.files);
+    setGalleryFiles(prev => [...prev, ...files]);
+    const newPreviews = files.map(file => URL.createObjectURL(file));
+    setGalleryPreviews(prev => [...prev, ...newPreviews]);
+  };
+
+  const removeGalleryImage = (index) => {
+    setGalleryFiles(prev => prev.filter((_, i) => i !== index));
+    setGalleryPreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('loading');
@@ -84,18 +99,33 @@ export default function AddCook() {
         profileImageUrl = uploadRes.data.imageUrl;
       }
 
-      // 2. Submit cook data with profileImage
+      // 2. Upload gallery images
+      const galleryUrls = [];
+      for (const file of galleryFiles) {
+        const formDataUpload = new FormData();
+        formDataUpload.append('image', file);
+        const uploadRes = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/cooks/upload`,
+          formDataUpload,
+          { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } }
+        );
+        galleryUrls.push(uploadRes.data.imageUrl);
+      }
+
+      // 3. Submit cook data with images
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/cooks`, 
-        { ...formData, profileImage: profileImageUrl },
+        { ...formData, profileImage: profileImageUrl, images: galleryUrls },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
       setStatus('success');
       setMessage(response.data.message || 'Cook added successfully!');
-      setFormData({ name: '', location: '', cuisine: '', price_range: '', contact: '', dietary_preferences: [], availability: { "Mon": [], "Tue": [], "Wed": [], "Thu": [], "Fri": [], "Sat": [], "Sun": [] }, profileImage: '' });
+      setFormData({ name: '', location: '', cuisine: '', price_range: '', contact: '', dietary_preferences: [], availability: { "Mon": [], "Tue": [], "Wed": [], "Thu": [], "Fri": [], "Sat": [], "Sun": [] }, profileImage: '', images: [] });
       setProfileFile(null);
       setProfilePreview(null);
+      setGalleryFiles([]);
+      setGalleryPreviews([]);
     } catch (err) {
       setStatus('error');
       setMessage(err.response?.data?.message || 'Failed to add cook. Please try again.');
@@ -311,6 +341,30 @@ export default function AddCook() {
                   className="w-full px-5 py-4 border border-[#E5E0D8] rounded-2xl focus:ring-1 focus:ring-[#1A6B4A] focus:border-[#1A6B4A] outline-none transition-all placeholder-[#A8A69F] text-[#1A1917] bg-[#F7F4EE]/30 resize-none"
                   placeholder="e.g. Traditional Bengali Fish Curry, South Indian Breakfast Thali..."
                 />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="text-[#6E6C67] text-[11px] font-bold uppercase tracking-widest mb-4 block">Portfolio Gallery (Masterpieces)</label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                  {galleryPreviews.map((preview, idx) => (
+                    <div key={idx} className="relative aspect-square rounded-xl overflow-hidden border border-[#E5E0D8] group">
+                      <img src={preview} className="w-full h-full object-cover" alt="Portfolio" />
+                      <button 
+                        type="button"
+                        onClick={() => removeGalleryImage(idx)}
+                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                      </button>
+                    </div>
+                  ))}
+                  <label className="aspect-square rounded-xl border-2 border-dashed border-[#E5E0D8] flex flex-col items-center justify-center cursor-pointer hover:bg-[#F7F4EE] transition-all">
+                    <svg className="w-6 h-6 text-[#A8A69F] mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
+                    <span className="text-[10px] font-bold text-[#A8A69F]">Add Photo</span>
+                    <input type="file" multiple accept="image/*" onChange={handleGalleryChange} className="hidden" />
+                  </label>
+                </div>
+                <p className="text-[10px] text-[#A8A69F] italic">Upload your best food pictures to attract more clients.</p>
               </div>
             </div>
 
