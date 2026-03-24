@@ -174,6 +174,7 @@ export default function Admin() {
 
           return {
             name: findVal(['name', 'full name', 'cook name', 'provider']),
+            email: findVal(['email', 'mail', 'e-mail', 'cook email']),
             location: findVal(['location', 'area', 'city', 'locality']),
             cuisine: findVal(['cuisine', 'specialty', 'type', 'food']),
             contact: findVal(['contact', 'phone', 'whatsapp', 'mobile']),
@@ -199,6 +200,7 @@ export default function Admin() {
     const template = [
       {
         "name": "Meera Krishnan",
+        "email": "meera@example.com",
         "location": "Indiranagar",
         "cuisine": "South Indian",
         "price_range": "₹250 - ₹500",

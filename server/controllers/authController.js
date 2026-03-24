@@ -37,9 +37,24 @@ const googleLogin = async (req, res) => {
 
     // Find or create the user
     let user = await User.findOne({ googleId });
+    let isNewUser = false;
     if (!user) {
       user = new User({ googleId, email, name, avatar });
       await user.save();
+      isNewUser = true;
+    }
+
+    // Auto-link any unclaimed bulk-imported cook profile with this email
+    const Cook = require('../models/Cook');
+    const unclaimedCook = await Cook.findOne({ 
+      email: email.toLowerCase(), 
+      userId: { $in: [null, undefined] } 
+    });
+    
+    if (unclaimedCook) {
+      unclaimedCook.userId = user._id;
+      // Also update name if needed or other fields? Let's keep it safe.
+      await unclaimedCook.save();
     }
 
     // Generate our own session JWT
