@@ -14,7 +14,8 @@ const {
   updateCookDetails,
   updateOwnProfile,
   deleteCook,
-  assignUserToCook
+  assignUserToCook,
+  bulkUploadCooks
 } = require('../controllers/cookController');
 
 // Multer config for Cloudinary uploads
@@ -29,7 +30,6 @@ router.get('/cooks/:id', getCookById);
 router.put('/cooks/profile/:id', authMiddleware, updateOwnProfile);
 router.post('/cooks/upload', authMiddleware, upload.single('image'), (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
-  // multer-storage-cloudinary provides the full URL in req.file.path
   const imageUrl = req.file.path;
   res.json({ imageUrl });
 });
@@ -40,7 +40,6 @@ router.patch('/admin/cooks/:id', updateCookStatus);
 router.put('/admin/cooks/:id', updateCookDetails);
 router.delete('/admin/cooks/:id', deleteCook);
 router.post('/admin/cooks/:id/assign', assignUserToCook);
-
-router.post('/admin/bulk-upload', authMiddleware, cookController.bulkUploadCooks);
+router.post('/admin/bulk-upload', bulkUploadCooks);
 
 module.exports = router;
