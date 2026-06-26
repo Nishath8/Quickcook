@@ -61,3 +61,4 @@ Please see [`api_contract.md`](api_contract.md) for full details on frontend-bac
 
 - The **frontend** is designed and configured to easily deploy under Vercel. Environment variable `VITE_API_BASE_URL` controls the targeted backend API.
 - The **backend** is designed to deploy seamlessly to platforms like Render, using `MONGO_URI` and `FRONTEND_URL` environment variables for correct operation and CORS configuration.
+
